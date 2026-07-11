@@ -7,7 +7,7 @@ on:
     branches: [ "main", "master" ]
 
 env:
-  GODOT_VERSION: 4.3
+  GODOT_VERSION: "4.3"
   EXPORT_NAME: TortillaLegend
 
 jobs:
@@ -29,10 +29,10 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Install Android Build Tools
-        run: |
-          sdkmanager "build-tools;34.0.0" "platforms;android-34"
+        with:
+          api-level: 34
+          build-tools: "34.0.0"
+          accept-android-sdk-licenses: true
 
       - name: Download Godot
         run: |
@@ -41,37 +41,56 @@ jobs:
           mv Godot_v${GODOT_VERSION}-stable_linux.x86_64 godot
           chmod +x godot
 
-      - name: Download Godot Export Templates
+      - name: Download Export Templates
         run: |
-          mkdir -p ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$TEMPLATES_DIR"
           wget -q https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
-          unzip Godot_v${GODOT_VERSION}-stable_export_templates.tpz
-          mv templates/* ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable/
+          unzip -q Godot_v${GODOT_VERSION}-stable_export_templates.tpz
+          mv templates/* "$TEMPLATES_DIR/"
+          ls "$TEMPLATES_DIR/"
 
-      - name: Create Android Debug Keystore
+      - name: Create Keystore
         run: |
-          keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Debug,OU=Debug,O=Debug,L=Debug,ST=Debug,C=US"
+          keytool -genkey -v \
+            -keystore debug.keystore \
+            -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 \
+            -validity 10000 \
+            -storepass android \
+            -keypass android \
+            -dname "CN=Debug,OU=Debug,O=Debug,L=Debug,ST=Debug,C=US"
 
-      - name: Configure Export
+      - name: Configure Export Presets
+        run: |
+          KEYPATH="$GITHUB_WORKSPACE/debug.keystore"
+          sed -i "s|keystore/debug=\"\"|keystore/debug=\"${KEYPATH}\"|g" export_presets.cfg
+          sed -i "s|keystore/debug_user=\"\"|keystore/debug_user=\"androiddebugkey\"|g" export_presets.cfg
+          sed -i "s|keystore/debug_password=\"\"|keystore/debug_password=\"android\"|g" export_presets.cfg
+          cat export_presets.cfg
+
+      - name: Validate Godot Project
+        run: |
+          ./godot --headless --import 2>&1 || true
+          echo "--- Import done ---"
+
+      - name: Export APK
         run: |
           mkdir -p build
-          sed -i 's|keystore/debug=""|keystore/debug="'"$GITHUB_WORKSPACE"'/debug.keystore"|' export_presets.cfg
-          sed -i 's|keystore/debug_user=""|keystore/debug_user="androiddebugkey"|' export_presets.cfg
-          sed -i 's|keystore/debug_password=""|keystore/debug_password="android"|' export_presets.cfg
-
-      - name: Export Project
-        run: |
-          ./godot --headless --export-debug "Android" build/${EXPORT_NAME}-debug.apk
+          ./godot --headless --export-debug "Android" "build/${EXPORT_NAME}-debug.apk" 2>&1
+          echo "--- Export done ---"
+          ls -la build/
 
       - name: Get Version
         id: version
+        if: success()
         run: |
           VERSION=$(date +'%Y%m%d')-$(echo $GITHUB_SHA | head -c 7)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        if: success() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         with:
           tag_name: "build-${{ steps.version.outputs.version }}"
           name: "Build ${{ steps.version.outputs.version }}"
