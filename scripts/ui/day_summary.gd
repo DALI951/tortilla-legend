@@ -13,18 +13,18 @@ func _ready() -> void:
 	display_summary()
 
 func display_summary() -> void:
-	title_label.text = tr("day_complete") % GameManager.current_day
-	money_earned.text = "%s: $%d" % [tr("money_earned"), GameManager.money_earned_today]
-	customers_served.text = "%s: %d" % [tr("customers_served"), GameManager.customers_served_today]
-	customers_lost.text = "%s: %d" % [tr("customers_lost"), GameManager.customers_lost_today]
-	wrong_orders.text = "%s: %d" % [tr("wrong_orders"), GameManager.wrong_orders_today]
-	thief_losses.text = "%s: $%d" % [tr("thief_losses"), GameManager.money_lost_to_thief_today]
+	title_label.text = LocalizationManager.tr_key("day_complete") % GameManager.current_day
+	money_earned.text = "%s: $%d" % [LocalizationManager.tr_key("money_earned"), GameManager.money_earned_today]
+	customers_served.text = "%s: %d" % [LocalizationManager.tr_key("customers_served"), GameManager.customers_served_today]
+	customers_lost.text = "%s: %d" % [LocalizationManager.tr_key("customers_lost"), GameManager.customers_lost_today]
+	wrong_orders.text = "%s: %d" % [LocalizationManager.tr_key("wrong_orders"), GameManager.wrong_orders_today]
+	thief_losses.text = "%s: $%d" % [LocalizationManager.tr_key("thief_losses"), GameManager.money_lost_to_thief_today]
 	
 	if GameManager.current_day >= GameManager.MAX_DAY:
-		title_label.text = tr("congratulations")
-		continue_button.text = tr("play_endless")
+		title_label.text = LocalizationManager.tr_key("congratulations")
+		continue_button.text = LocalizationManager.tr_key("play_endless")
 	else:
-		continue_button.text = tr("continue")
+		continue_button.text = LocalizationManager.tr_key("continue")
 
 func _on_continue_pressed() -> void:
 	if GameManager.current_day >= GameManager.MAX_DAY:

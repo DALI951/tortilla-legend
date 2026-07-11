@@ -89,7 +89,7 @@ func set_language(lang: String) -> void:
 		current_language = lang
 		language_changed.emit(lang)
 
-func tr(key: String) -> String:
+func tr_key(key: String) -> String:
 	if translations.has(current_language) and translations[current_language].has(key):
 		return translations[current_language][key]
 	if translations.has("en") and translations["en"].has(key):

@@ -12,11 +12,11 @@ func _ready() -> void:
 	settings_button.pressed.connect(_on_settings_pressed)
 
 func update_display() -> void:
-	day_label.text = tr("day_label") % GameManager.current_day
+	day_label.text = LocalizationManager.tr_key("day_label") % GameManager.current_day
 	if GameManager.current_day > GameManager.MAX_DAY:
-		play_button.text = tr("play_endless")
+		play_button.text = LocalizationManager.tr_key("play_endless")
 	else:
-		play_button.text = tr("play")
+		play_button.text = LocalizationManager.tr_key("play")
 
 func _on_play_pressed() -> void:
 	if SaveManager.has_save():
