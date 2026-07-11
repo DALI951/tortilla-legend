@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "main", "master" ]
 
+permissions:
+  contents: write
+
 env:
   GODOT_VERSION: "4.3"
   EXPORT_NAME: TortillaLegend
@@ -32,6 +35,11 @@ jobs:
         with:
           accept-android-sdk-licenses: true
 
+      - name: Install Android SDK Packages
+        run: |
+          sdkmanager --install "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+          sdkmanager --list_installed | head -20
+
       - name: Download Godot
         run: |
           wget -q https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
@@ -46,12 +54,14 @@ jobs:
           wget -q https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           unzip -q Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           mv templates/* "$TEMPLATES_DIR/"
+          ls "$TEMPLATES_DIR/"
 
       - name: Install Android Build Template
         run: |
           TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
           unzip -q "$TEMPLATES_DIR/android_source.zip" -d android
-          echo "Android template installed"
+          echo "Android template contents:"
+          ls android/
 
       - name: Create Keystore
         run: |
@@ -70,18 +80,31 @@ jobs:
           sed -i "s|keystore/debug=\"\"|keystore/debug=\"${KEYPATH}\"|g" export_presets.cfg
           sed -i "s|keystore/debug_user=\"\"|keystore/debug_user=\"androiddebugkey\"|g" export_presets.cfg
           sed -i "s|keystore/debug_password=\"\"|keystore/debug_password=\"android\"|g" export_presets.cfg
+          echo "--- export_presets.cfg ---"
+          cat export_presets.cfg
 
       - name: Import Project
         run: |
-          ./godot --headless --import 2>&1 || true
+          timeout 30 ./godot --headless --import 2>&1 || true
+
+      - name: Verify Project Config
+        run: |
+          echo "--- project.godot renderer ---"
+          grep -E "renderer|rendering|opengl|vulkan" project.godot || echo "no renderer config found"
+          echo "--- .godot folder ---"
+          ls -la .godot/ 2>/dev/null || echo "no .godot folder"
+          echo "--- android folder ---"
+          ls -la android/ 2>/dev/null || echo "no android folder"
 
       - name: Build APK
         run: |
           mkdir -p build
-          ./godot --headless --export-debug "Android" "build/${EXPORT_NAME}-debug.apk" 2>&1 || true
+          ./godot --headless --export-debug "Android" "build/${EXPORT_NAME}-debug.apk"
+          echo "--- build output ---"
           ls -la build/
 
       - name: Get Version
+        if: always()
         id: version
         run: |
           VERSION=$(date +'%Y%m%d')-$(echo $GITHUB_SHA | head -c 7)
@@ -94,6 +117,5 @@ jobs:
           tag_name: "build-${{ steps.version.outputs.version }}"
           name: "Build ${{ steps.version.outputs.version }}"
           files: build/*.apk
-          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
