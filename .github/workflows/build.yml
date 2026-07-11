@@ -36,7 +36,13 @@ jobs:
           if [ -d /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ]; then
             mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
           fi
-          echo 'export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"' >> ~/.config/godot/editor_settings-4.tres
+          echo "=== SDK path ==="
+          echo $ANDROID_HOME
+          ls $ANDROID_HOME/platforms/ 2>/dev/null || echo "no platforms"
+          ls /usr/local/lib/android/sdk/ 2>/dev/null || echo "no sdk at /usr/local/lib"
+          echo "=== Java ==="
+          java -version 2>&1 || echo "no java"
+          ls /usr/lib/jvm/ 2>/dev/null || echo "no jvm dir"
 
       - name: Install Android Build Template
         run: |
@@ -44,13 +50,25 @@ jobs:
           if [ -f "$TEMPLATES_DIR/android_source.zip" ]; then
             unzip -q "$TEMPLATES_DIR/android_source.zip" -d android
             echo "${GODOT_VERSION}.stable" > android/.build_version
-            echo "Build template installed, .build_version:"
+            echo "Build template installed"
             cat android/.build_version
           else
             echo "android_source.zip not found at $TEMPLATES_DIR"
             ls "$TEMPLATES_DIR/" 2>/dev/null || echo "Templates dir not found"
             exit 1
           fi
+
+      - name: Configure Editor Settings
+        run: |
+          mkdir -p ~/.config/godot
+          cat > ~/.config/godot/editor_settings-4.tres << 'EOF'
+          [gd_resource type="EditorSettings" format=3]
+          [resource]
+          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/sdk_path = "/usr/local/lib/android/sdk"
+          EOF
+          echo "=== editor_settings ==="
+          cat ~/.config/godot/editor_settings-4.tres
 
       - name: Use Docker Keystore
         run: |
