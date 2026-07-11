@@ -13,6 +13,15 @@ var is_spawning: bool = false
 var customer_slots: Array[Vector2] = []
 var occupied_slots: Dictionary = {}
 
+var customer_colors: Array[Color] = [
+	Color(0.85, 0.35, 0.3),
+	Color(0.3, 0.5, 0.85),
+	Color(0.3, 0.75, 0.4),
+	Color(0.75, 0.4, 0.75),
+	Color(0.85, 0.6, 0.2),
+	Color(0.4, 0.7, 0.8),
+]
+
 func _ready() -> void:
 	GameManager.day_started.connect(_on_day_started)
 	_calculate_slots()
@@ -38,9 +47,9 @@ func _process(delta: float) -> void:
 
 func _calculate_slots() -> void:
 	customer_slots.clear()
-	var slot_width: float = 160.0
-	var start_x: float = 100.0
-	var y: float = 200.0
+	var slot_width: float = 170.0
+	var start_x: float = 85.0
+	var y: float = 150.0
 	for i in range(6):
 		customer_slots.append(Vector2(start_x + i * slot_width, y))
 
@@ -53,24 +62,34 @@ func _spawn_customer() -> void:
 	customer.set_script(load("res://scripts/gameplay/customer.gd"))
 	customer.position = customer_slots[slot_idx]
 
-	var sprite: ColorRect = ColorRect.new()
-	sprite.custom_minimum_size = Vector2(100, 130)
-	var colors: Array[Color] = [
-		Color(0.9, 0.3, 0.3),
-		Color(0.3, 0.5, 0.9),
-		Color(0.3, 0.8, 0.4),
-		Color(0.8, 0.4, 0.8),
-		Color(0.9, 0.6, 0.2)
-	]
-	sprite.color = colors[customers_spawned % colors.size()]
-	sprite.position = Vector2(-50, -65)
-	customer.add_child(sprite)
+	var color: Color = customer_colors[customers_spawned % customer_colors.size()]
+
+	var body: ColorRect = ColorRect.new()
+	body.size = Vector2(80, 90)
+	body.position = Vector2(-40, -10)
+	body.color = color
+	var body_style: StyleBoxFlat = StyleBoxFlat.new()
+	body_style.set_corner_radius_all(12)
+	body_style.set_content_margin_all(0)
+	body.add_theme_stylebox_override("panel", body_style)
+	customer.add_child(body)
+
+	var head: ColorRect = ColorRect.new()
+	head.size = Vector2(50, 50)
+	head.position = Vector2(-25, -60)
+	head.color = Color(0.92, 0.78, 0.65)
+	var head_style: StyleBoxFlat = StyleBoxFlat.new()
+	head_style.set_corner_radius_all(25)
+	head_style.set_content_margin_all(0)
+	head.add_theme_stylebox_override("panel", head_style)
+	customer.add_child(head)
 
 	var name_label: Label = Label.new()
-	name_label.position = Vector2(-50, 70)
-	name_label.custom_minimum_size = Vector2(100, 20)
+	name_label.position = Vector2(-60, 100)
+	name_label.custom_minimum_size = Vector2(120, 24)
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	name_label.add_theme_font_size_override("font_size", 14)
+	name_label.add_theme_font_size_override("font_size", 16)
+	name_label.text = _get_customer_name()
 	customer.add_child(name_label)
 
 	add_child(customer)
@@ -80,6 +99,13 @@ func _spawn_customer() -> void:
 	customers_spawned += 1
 	customers_active += 1
 	customer_spawned.emit(customer)
+
+func _get_customer_name() -> String:
+	var names: Array[String] = [
+		"Alex", "Sam", "Jo", "Pat", "Max",
+		"Lee", "Kim", "Rio", "Sky", "Finn",
+	]
+	return names[randi() % names.size()]
 
 func _find_free_slot() -> int:
 	for i in range(customer_slots.size()):

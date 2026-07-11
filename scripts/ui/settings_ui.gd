@@ -11,7 +11,17 @@ func _ready() -> void:
 	lang_button.pressed.connect(_on_lang_pressed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	choice_toggle.toggled.connect(_on_choice_toggled)
+	_apply_fonts()
 	_update_display()
+
+func _apply_fonts() -> void:
+	$Panel/VBox/Title.add_theme_font_size_override("font_size", 36)
+	$Panel/VBox/LanguageLabel.add_theme_font_size_override("font_size", 24)
+	lang_button.add_theme_font_size_override("font_size", 24)
+	$Panel/VBox/SFXBox/SFXLabel.add_theme_font_size_override("font_size", 24)
+	sfx_label.add_theme_font_size_override("font_size", 24)
+	choice_toggle.add_theme_font_size_override("font_size", 24)
+	back_button.add_theme_font_size_override("font_size", 28)
 
 func _update_display() -> void:
 	lang_button.text = LocalizationManager.tr_key("language") + ": " + LocalizationManager.current_language.upper()

@@ -10,7 +10,17 @@ extends Control
 
 func _ready() -> void:
 	continue_button.pressed.connect(_on_continue_pressed)
+	_apply_fonts()
 	display_summary()
+
+func _apply_fonts() -> void:
+	title_label.add_theme_font_size_override("font_size", 36)
+	money_earned.add_theme_font_size_override("font_size", 28)
+	customers_served.add_theme_font_size_override("font_size", 28)
+	customers_lost.add_theme_font_size_override("font_size", 28)
+	wrong_orders.add_theme_font_size_override("font_size", 28)
+	thief_losses.add_theme_font_size_override("font_size", 28)
+	continue_button.add_theme_font_size_override("font_size", 32)
 
 func display_summary() -> void:
 	title_label.text = LocalizationManager.tr_key("day_complete") % GameManager.current_day
@@ -19,7 +29,7 @@ func display_summary() -> void:
 	customers_lost.text = "%s: %d" % [LocalizationManager.tr_key("customers_lost"), GameManager.customers_lost_today]
 	wrong_orders.text = "%s: %d" % [LocalizationManager.tr_key("wrong_orders"), GameManager.wrong_orders_today]
 	thief_losses.text = "%s: $%d" % [LocalizationManager.tr_key("thief_losses"), GameManager.money_lost_to_thief_today]
-	
+
 	if GameManager.current_day >= GameManager.MAX_DAY:
 		title_label.text = LocalizationManager.tr_key("congratulations")
 		continue_button.text = LocalizationManager.tr_key("play_endless")

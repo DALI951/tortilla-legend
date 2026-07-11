@@ -19,6 +19,16 @@ var day_started_received: bool = false
 
 var customer_spawner_instance: Node2D = null
 
+var ingredient_colors: Dictionary = {
+	"lettuce": Color(0.3, 0.8, 0.3),
+	"tomato": Color(0.9, 0.2, 0.2),
+	"salsa": Color(0.8, 0.3, 0.1),
+	"cilantro": Color(0.2, 0.7, 0.4),
+	"onion": Color(0.9, 0.9, 0.8),
+	"cheese": Color(0.95, 0.85, 0.2),
+	"peppers": Color(0.9, 0.3, 0.1),
+}
+
 @onready var timer_label: Label = $HUD/TimerLabel
 @onready var money_label: Label = $HUD/MoneyLabel
 @onready var pause_button: Button = $HUD/PauseButton
@@ -28,10 +38,9 @@ var customer_spawner_instance: Node2D = null
 @onready var serve_button: Button = $KitchenArea/ServeButton
 @onready var customer_container: Control = $CustomerArea/CustomerContainer
 @onready var day_timer_node: Timer = $DayTimerNode
-@onready var kitchen_area: Control = $KitchenArea
-@onready var customer_area: Control = $CustomerArea
 @onready var progress_label: Label = $KitchenArea/ProgressLabel
 @onready var event_label: Label = $HUD/EventLabel
+@onready var ingredient_dots: HBoxContainer = $CustomerArea/IngredientDots
 
 func _ready() -> void:
 	pause_button.pressed.connect(_on_pause_pressed)
@@ -41,6 +50,7 @@ func _ready() -> void:
 	day_timer_node.timeout.connect(_on_day_tick)
 	GameManager.day_started.connect(_on_day_started)
 	GameManager.day_ended.connect(_on_day_ended)
+	_apply_fonts()
 	_build_required_list()
 	tortilla_max = _get_tortilla_max()
 	serve_button.visible = false
@@ -49,6 +59,18 @@ func _ready() -> void:
 	_update_ui()
 	if GameManager.current_state == GameManager.GameState.PLAYING:
 		_start_day_logic(GameManager.current_day)
+
+func _apply_fonts() -> void:
+	timer_label.add_theme_font_size_override("font_size", 36)
+	money_label.add_theme_font_size_override("font_size", 36)
+	pause_button.add_theme_font_size_override("font_size", 28)
+	station_label.add_theme_font_size_override("font_size", 32)
+	order_label.add_theme_font_size_override("font_size", 24)
+	progress_label.add_theme_font_size_override("font_size", 26)
+	action_button.add_theme_font_size_override("font_size", 32)
+	serve_button.add_theme_font_size_override("font_size", 36)
+	event_label.add_theme_font_size_override("font_size", 24)
+	$CustomerArea/CustomerLabel.add_theme_font_size_override("font_size", 28)
 
 func _build_required_list() -> void:
 	required_ingredients.clear()
@@ -100,6 +122,7 @@ func _start_day_logic(day: int) -> void:
 	tortilla_max = _get_tortilla_max()
 	serve_button.visible = false
 	event_label.visible = false
+	_clear_ingredient_dots()
 	_spawn_customers(day)
 	day_timer_node.start()
 	_update_ui()
@@ -109,14 +132,19 @@ func _spawn_customers(day: int) -> void:
 	customer_spawner_instance.set_script(load("res://scripts/gameplay/customer_spawner.gd"))
 	customer_container.add_child(customer_spawner_instance)
 	customer_spawner_instance.all_customers_served.connect(_on_all_customers_served)
+	customer_spawner_instance.customer_spawned.connect(_on_customer_spawned)
 	customer_spawner_instance._on_day_started(day)
-	for slot_pos in customer_spawner_instance.customer_slots:
-		var marker: ColorRect = ColorRect.new()
-		marker.size = Vector2(100, 130)
-		marker.position = slot_pos + Vector2(-50, -65)
-		marker.color = Color(0.85, 0.78, 0.68, 0.3)
-		marker.name = "Slot" + str(customer_spawner_instance.customer_slots.find(slot_pos))
-		customer_container.add_child(marker)
+
+func _on_customer_spawned(customer: Node2D) -> void:
+	if state == PrepState.WAITING and current_customer == null:
+		_select_customer(customer)
+
+func _select_customer(customer: Node2D) -> void:
+	if customer == null or not is_instance_valid(customer):
+		return
+	current_customer = customer
+	FeedbackManager.vibrate_light()
+	_update_ui()
 
 func _on_day_ended(_day: int) -> void:
 	day_timer_node.stop()
@@ -155,58 +183,121 @@ func _update_ui() -> void:
 
 	match state:
 		PrepState.WAITING:
-			station_label.text = "Waiting for customer..."
+			station_label.text = "Tap a customer to start"
 			action_button.visible = false
-			order_label.text = ""
+			if current_customer:
+				_show_order()
+			else:
+				order_label.text = ""
 			progress_label.text = ""
+			_clear_ingredient_dots()
 		PrepState.TORTILLA:
-			station_label.text = "TORTILLA STATION"
+			station_label.text = "FILL THE TORTILLA"
 			action_button.visible = true
 			action_button.disabled = false
 			action_button.text = "TAP TO FILL"
-			progress_label.text = "%d/%d taps" % [tortilla_taps, tortilla_max]
+			progress_label.text = "%d / %d" % [tortilla_taps, tortilla_max]
 			_show_order()
+			_update_ingredient_dots_tortilla()
 		PrepState.GRILL:
-			station_label.text = "GRILL STATION"
+			station_label.text = "GRILL THE MEAT"
 			action_button.visible = true
 			if not grill_placed:
 				action_button.text = "PLACE MEAT"
 				action_button.disabled = false
 				progress_label.text = ""
+				_clear_ingredient_dots()
 			elif not grill_done:
 				var pct: int = int((grill_timer / grill_cook_time) * 100)
 				action_button.text = "COOKING..."
 				action_button.disabled = true
-				progress_label.text = "%d%% cooked" % pct
+				progress_label.text = "%d%%" % pct
+				_clear_ingredient_dots()
 			else:
 				action_button.text = "TAKE MEAT"
 				action_button.disabled = false
 				progress_label.text = "DONE!"
+				_clear_ingredient_dots()
 		PrepState.TOPPINGS:
-			station_label.text = "TOPPING STATION"
+			station_label.text = "ADD TOPPINGS"
 			action_button.visible = true
 			action_button.disabled = false
-			action_button.text = "ADD TOPPINGS"
-			progress_label.text = "Tap to add each ingredient"
+			action_button.text = "TAP TO ADD"
+			progress_label.text = "Tap until all added"
 			_show_order()
+			_update_ingredient_dots_toppings()
 		PrepState.PREP_DONE:
 			station_label.text = "TACO READY!"
 			action_button.visible = false
 			serve_button.visible = true
-			progress_label.text = "Tap SERVE, then tap a customer"
+			progress_label.text = "Tap SERVE, then tap customer"
 			_show_order()
+			_update_ingredient_dots_done()
 		PrepState.SERVING:
-			station_label.text = "SELECT A CUSTOMER"
+			station_label.text = "TAP A CUSTOMER TO SERVE"
 			action_button.visible = false
 			serve_button.visible = false
-			progress_label.text = "Tap on a customer to serve"
+			progress_label.text = ""
 			_show_order()
+			_update_ingredient_dots_done()
 
 func _show_order() -> void:
 	if current_customer and is_instance_valid(current_customer) and current_customer.has_method("get_order_display"):
 		order_label.text = "ORDER: " + current_customer.get_order_display()
 	else:
 		order_label.text = ""
+
+func _clear_ingredient_dots() -> void:
+	for child in ingredient_dots.get_children():
+		child.queue_free()
+
+func _update_ingredient_dots_tortilla() -> void:
+	_clear_ingredient_dots()
+	for i in range(tortilla_max):
+		var dot: ColorRect = ColorRect.new()
+		dot.custom_minimum_size = Vector2(40, 40)
+		dot.size = Vector2(40, 40)
+		if i < tortilla_taps and i < required_ingredients.size():
+			dot.color = ingredient_colors.get(required_ingredients[i], Color.WHITE)
+		elif i < tortilla_taps:
+			dot.color = Color(0.9, 0.85, 0.7)
+		else:
+			dot.color = Color(0.6, 0.55, 0.5, 0.5)
+		var style: StyleBoxFlat = StyleBoxFlat.new()
+		style.set_corner_radius_all(20)
+		style.set_content_margin_all(0)
+		dot.add_theme_stylebox_override("panel", style)
+		ingredient_dots.add_child(dot)
+
+func _update_ingredient_dots_toppings() -> void:
+	_clear_ingredient_dots()
+	var all_toppings: Array[String] = _get_available_toppings()
+	for topping in all_toppings:
+		var dot: ColorRect = ColorRect.new()
+		dot.custom_minimum_size = Vector2(40, 40)
+		dot.size = Vector2(40, 40)
+		if topping in taco_ingredients:
+			dot.color = ingredient_colors.get(topping, Color.WHITE)
+		else:
+			dot.color = Color(0.6, 0.55, 0.5, 0.5)
+		var style: StyleBoxFlat = StyleBoxFlat.new()
+		style.set_corner_radius_all(20)
+		style.set_content_margin_all(0)
+		dot.add_theme_stylebox_override("panel", style)
+		ingredient_dots.add_child(dot)
+
+func _update_ingredient_dots_done() -> void:
+	_clear_ingredient_dots()
+	for ingredient in taco_ingredients:
+		var dot: ColorRect = ColorRect.new()
+		dot.custom_minimum_size = Vector2(40, 40)
+		dot.size = Vector2(40, 40)
+		dot.color = ingredient_colors.get(ingredient, Color.WHITE)
+		var style: StyleBoxFlat = StyleBoxFlat.new()
+		style.set_corner_radius_all(20)
+		style.set_content_margin_all(0)
+		dot.add_theme_stylebox_override("panel", style)
+		ingredient_dots.add_child(dot)
 
 func _on_action_pressed() -> void:
 	if is_paused:
@@ -311,7 +402,6 @@ func _perform_serve() -> void:
 		payment = int(payment * 0.5)
 
 	GameManager.serve_customer(is_correct, payment)
-
 	FeedbackManager.vibrate_medium()
 
 	current_customer.is_served = true
@@ -329,6 +419,7 @@ func _perform_serve() -> void:
 	has_drink = false
 	serve_button.visible = false
 	action_button.disabled = false
+	_clear_ingredient_dots()
 	_update_ui()
 
 func _on_all_customers_served() -> void:
@@ -345,16 +436,27 @@ func _on_pause_pressed() -> void:
 		day_timer_node.paused = false
 
 func _unhandled_input(event: InputEvent) -> void:
-	if state != PrepState.SERVING:
-		return
-	if event is InputEventScreenTouch and event.pressed:
-		for child in customer_container.get_children():
-			if child is Node2D and child != customer_spawner_instance:
-				var global_pos: Vector2 = child.global_position
-				var mouse_pos: Vector2 = get_global_mouse_position()
-				if global_pos.distance_to(mouse_pos) < 100:
-					serve_customer_at_slot(child)
-					return
+	if state == PrepState.SERVING:
+		if event is InputEventScreenTouch and event.pressed:
+			for child in customer_container.get_children():
+				if child is Node2D and child != customer_spawner_instance:
+					var global_pos: Vector2 = child.global_position
+					var mouse_pos: Vector2 = get_global_mouse_position()
+					if global_pos.distance_to(mouse_pos) < 120:
+						serve_customer_at_slot(child)
+						return
+	elif state == PrepState.WAITING:
+		if event is InputEventScreenTouch and event.pressed:
+			for child in customer_container.get_children():
+				if child is Node2D and child != customer_spawner_instance:
+					var global_pos: Vector2 = child.global_position
+					var mouse_pos: Vector2 = get_global_mouse_position()
+					if global_pos.distance_to(mouse_pos) < 120:
+						if current_customer != child:
+							_select_customer(child)
+						state = PrepState.TORTILLA
+						_update_ui()
+						return
 
 func _exit_tree() -> void:
 	if customer_spawner_instance and is_instance_valid(customer_spawner_instance):

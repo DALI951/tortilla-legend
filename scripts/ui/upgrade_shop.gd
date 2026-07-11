@@ -10,9 +10,16 @@ var upgrades_data: Array = []
 func _ready() -> void:
 	back_button.pressed.connect(_on_back_pressed)
 	next_day_button.pressed.connect(_on_next_day_pressed)
+	_apply_fonts()
 	load_upgrades()
 	display_upgrades()
 	update_money()
+
+func _apply_fonts() -> void:
+	$TopBar/Title.add_theme_font_size_override("font_size", 36)
+	money_label.add_theme_font_size_override("font_size", 36)
+	back_button.add_theme_font_size_override("font_size", 28)
+	next_day_button.add_theme_font_size_override("font_size", 28)
 
 func load_upgrades() -> void:
 	var file: FileAccess = FileAccess.open("res://data/upgrades.json", FileAccess.READ)
@@ -69,17 +76,17 @@ func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available:
 
 	var name_label: Label = Label.new()
 	name_label.text = upgrade.get("name", "Upgrade")
-	name_label.add_theme_font_size_override("font_size", 18)
+	name_label.add_theme_font_size_override("font_size", 24)
 	info_vbox.add_child(name_label)
 
 	var desc_label: Label = Label.new()
 	desc_label.text = upgrade.get("description", "")
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc_label.add_theme_font_size_override("font_size", 14)
+	desc_label.add_theme_font_size_override("font_size", 18)
 	info_vbox.add_child(desc_label)
 
 	var right_vbox: VBoxContainer = VBoxContainer.new()
-	right_vbox.custom_minimum_size = Vector2(120, 0)
+	right_vbox.custom_minimum_size = Vector2(140, 0)
 	right_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	hbox.add_child(right_vbox)
 
@@ -87,18 +94,20 @@ func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available:
 		var owned_label: Label = Label.new()
 		owned_label.text = "OWNED"
 		owned_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		owned_label.add_theme_font_size_override("font_size", 24)
 		owned_label.add_theme_color_override("font_color", Color(0.2, 0.5, 0.2))
 		right_vbox.add_child(owned_label)
 	else:
 		var cost_label: Label = Label.new()
 		cost_label.text = "$%d" % upgrade.get("cost", 0)
 		cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		cost_label.add_theme_font_size_override("font_size", 20)
+		cost_label.add_theme_font_size_override("font_size", 26)
 		right_vbox.add_child(cost_label)
 
 		if is_available:
 			var buy_button: Button = Button.new()
 			buy_button.text = "BUY"
+			buy_button.add_theme_font_size_override("font_size", 24)
 			buy_button.pressed.connect(_on_buy_pressed.bind(upgrade))
 			right_vbox.add_child(buy_button)
 
