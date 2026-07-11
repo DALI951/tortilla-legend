@@ -52,9 +52,15 @@ jobs:
         run: |
           keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Debug,OU=Debug,O=Debug,L=Debug,ST=Debug,C=US"
 
+      - name: Configure Export
+        run: |
+          mkdir -p build
+          sed -i 's|keystore/debug=""|keystore/debug="'"$GITHUB_WORKSPACE"'/debug.keystore"|' export_presets.cfg
+          sed -i 's|keystore/debug_user=""|keystore/debug_user="androiddebugkey"|' export_presets.cfg
+          sed -i 's|keystore/debug_password=""|keystore/debug_password="android"|' export_presets.cfg
+
       - name: Export Project
         run: |
-          ./godot --headless --export-release "Android" build/${EXPORT_NAME}.apk || \
           ./godot --headless --export-debug "Android" build/${EXPORT_NAME}-debug.apk
 
       - name: Get Version
