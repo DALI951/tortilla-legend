@@ -52,22 +52,16 @@ jobs:
             exit 1
           fi
 
-      - name: Create Keystore
+      - name: Use Docker Keystore
         run: |
-          keytool -genkey -v \
-            -keystore /root/debug.keystore \
-            -alias androiddebugkey \
-            -keyalg RSA -keysize 2048 \
-            -validity 10000 \
-            -storepass android \
-            -keypass android \
-            -dname "CN=Debug,OU=Debug,O=Debug,L=Debug,ST=Debug,C=US"
+          echo "Using built-in debug keystore"
+          ls -la /root/debug.keystore 2>/dev/null || echo "No default keystore found"
 
       - name: Configure Export Presets
         run: |
-          sed -i 's@keystore/debug=".*"@keystore/debug="/root/debug.keystore"@g' export_presets.cfg
-          sed -i 's@keystore/debug_user=".*"@keystore/debug_user="androiddebugkey"@g' export_presets.cfg
-          sed -i 's@keystore/debug_password=".*"@keystore/debug_password="android"@g' export_presets.cfg
+          sed -i 's|keystore/debug=""|keystore/debug="/root/debug.keystore"|g' export_presets.cfg
+          sed -i 's|keystore/debug_user=""|keystore/debug_user="androiddebugkey"|g' export_presets.cfg
+          sed -i 's|keystore/debug_password=""|keystore/debug_password="android"|g' export_presets.cfg
           echo "--- export_presets.cfg ---"
           cat export_presets.cfg
 
