@@ -1,0 +1,61 @@
+{
+	"events": [
+		{
+			"id": "food_critic",
+			"name": "Food Critic Visit",
+			"type": "special_visitor",
+			"description": "A food critic is visiting! Serve perfectly for bonus money.",
+			"effect": {
+				"type": "bonus_payment",
+				"multiplier": 2.0
+			},
+			"visual": "critic_character"
+		},
+		{
+			"id": "celebrity",
+			"name": "Celebrity Sighting",
+			"type": "special_visitor",
+			"description": "A celebrity is here! Serve them fast for double tips!",
+			"effect": {
+				"type": "bonus_payment",
+				"multiplier": 2.5
+			},
+			"visual": "celebrity_character"
+		},
+		{
+			"id": "health_inspector",
+			"name": "Health Inspector",
+			"type": "special_visitor",
+			"description": "Health inspector is watching! Don't make mistakes!",
+			"effect": {
+				"type": "penalty_on_wrong",
+				"penalty_multiplier": 2.0
+			},
+			"visual": "inspector_character"
+		},
+		{
+			"id": "festival_bonanza",
+			"name": "Festival Bonanza",
+			"type": "festival",
+			"description": "It's festival day! More customers but less patience!",
+			"effect": {
+				"type": "more_customers",
+				"customer_multiplier": 1.5,
+				"patience_multiplier": 0.6
+			},
+			"visual": "festival_decorations"
+		},
+		{
+			"id": "holiday_rush",
+			"name": "Holiday Rush",
+			"type": "festival",
+			"description": "Holiday rush! Customers want high-value orders!",
+			"effect": {
+				"type": "high_value_orders",
+				"price_multiplier": 2.0,
+				"customer_multiplier": 1.3
+			},
+			"visual": "holiday_decorations"
+		}
+	]
+}

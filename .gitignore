@@ -1,0 +1,22 @@
+# Godot 4 specific
+.godot/
+*.import
+export_credentials.cfg
+
+# Builds
+build/
+*.apk
+*.aab
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary
+*.tmp
+*.bak

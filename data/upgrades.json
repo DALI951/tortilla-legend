@@ -1,0 +1,303 @@
+{
+	"upgrades": [
+		{
+			"id": "grill_speed_1",
+			"name": "Faster Grill I",
+			"description": "Cook meat 20% faster",
+			"category": "grill",
+			"cost": 50,
+			"tier": 1,
+			"position": {"x": 100, "y": 500},
+			"prerequisites": [],
+			"effect": {"type": "grill_speed", "value": 0.8}
+		},
+		{
+			"id": "grill_speed_2",
+			"name": "Faster Grill II",
+			"description": "Cook meat 40% faster",
+			"category": "grill",
+			"cost": 200,
+			"tier": 2,
+			"position": {"x": 100, "y": 500},
+			"prerequisites": ["grill_speed_1"],
+			"effect": {"type": "grill_speed", "value": 0.6}
+		},
+		{
+			"id": "grill_noburn",
+			"name": "Burn Prevention",
+			"description": "Meat no longer burns on the grill",
+			"category": "grill",
+			"cost": 800,
+			"tier": 3,
+			"position": {"x": 100, "y": 500},
+			"prerequisites": ["grill_speed_2"],
+			"effect": {"type": "grill_noburn", "value": true}
+		},
+		{
+			"id": "grill_auto_remove",
+			"name": "Auto-Remove Meat",
+			"description": "Cooked meat auto-moves to counter",
+			"category": "grill",
+			"cost": 1500,
+			"tier": 4,
+			"position": {"x": 100, "y": 500},
+			"prerequisites": ["grill_noburn"],
+			"effect": {"type": "grill_auto_remove", "value": true}
+		},
+		{
+			"id": "tortilla_taps_1",
+			"name": "Better Prep Tools I",
+			"description": "Tortilla needs 1 fewer tap",
+			"category": "tortilla",
+			"cost": 30,
+			"tier": 1,
+			"position": {"x": 960, "y": 600},
+			"prerequisites": [],
+			"effect": {"type": "tortilla_taps", "value": -1}
+		},
+		{
+			"id": "tortilla_taps_2",
+			"name": "Better Prep Tools II",
+			"description": "Tortilla needs 1 fewer tap",
+			"category": "tortilla",
+			"cost": 100,
+			"tier": 2,
+			"position": {"x": 960, "y": 600},
+			"prerequisites": ["tortilla_taps_1"],
+			"effect": {"type": "tortilla_taps", "value": -1}
+		},
+		{
+			"id": "tortilla_taps_3",
+			"name": "Better Prep Tools III",
+			"description": "Tortilla needs 1 fewer tap",
+			"category": "tortilla",
+			"cost": 300,
+			"tier": 3,
+			"position": {"x": 960, "y": 600},
+			"prerequisites": ["tortilla_taps_2"],
+			"effect": {"type": "tortilla_taps", "value": -1}
+		},
+		{
+			"id": "tortilla_auto",
+			"name": "Auto-Fill Tortilla",
+			"description": "Tortilla fills in 1 tap",
+			"category": "tortilla",
+			"cost": 1000,
+			"tier": 4,
+			"position": {"x": 960, "y": 600},
+			"prerequisites": ["tortilla_taps_3"],
+			"effect": {"type": "tortilla_taps", "value": -999}
+		},
+		{
+			"id": "topping_auto_1",
+			"name": "Topping Assist I",
+			"description": "Toppings can be tapped instead of dragged",
+			"category": "toppings",
+			"cost": 150,
+			"tier": 1,
+			"position": {"x": 1400, "y": 350},
+			"prerequisites": [],
+			"effect": {"type": "topping_mode", "value": "tap"}
+		},
+		{
+			"id": "topping_auto_2",
+			"name": "Topping Assist II",
+			"description": "Toppings auto-fill after tapping",
+			"category": "toppings",
+			"cost": 600,
+			"tier": 2,
+			"position": {"x": 1400, "y": 350},
+			"prerequisites": ["topping_auto_1"],
+			"effect": {"type": "topping_mode", "value": "auto"}
+		},
+		{
+			"id": "soda_tap",
+			"name": "Soda Tap Fill",
+			"description": "Soda fills with tap instead of hold",
+			"category": "drinks",
+			"cost": 80,
+			"tier": 1,
+			"position": {"x": 960, "y": 850},
+			"prerequisites": [],
+			"effect": {"type": "soda_mode", "value": "tap"}
+		},
+		{
+			"id": "soda_fast",
+			"name": "Faster Pour",
+			"description": "Soda fills faster",
+			"category": "drinks",
+			"cost": 250,
+			"tier": 2,
+			"position": {"x": 960, "y": 850},
+			"prerequisites": ["soda_tap"],
+			"effect": {"type": "soda_speed", "value": 0.5}
+		},
+		{
+			"id": "soda_auto",
+			"name": "Auto-Fill Cups",
+			"description": "Cups fill themselves automatically",
+			"category": "drinks",
+			"cost": 900,
+			"tier": 3,
+			"position": {"x": 960, "y": 850},
+			"prerequisites": ["soda_fast"],
+			"effect": {"type": "soda_auto", "value": true}
+		},
+		{
+			"id": "sides_chips",
+			"name": "Unlock Chips",
+			"description": "Add chips to your menu",
+			"category": "sides",
+			"cost": 60,
+			"tier": 1,
+			"position": {"x": 200, "y": 350},
+			"prerequisites": [],
+			"effect": {"type": "unlock_side", "value": "chips"}
+		},
+		{
+			"id": "sides_rice",
+			"name": "Unlock Rice",
+			"description": "Add Mexican rice to your menu",
+			"category": "sides",
+			"cost": 120,
+			"tier": 1,
+			"position": {"x": 200, "y": 350},
+			"prerequisites": [],
+			"effect": {"type": "unlock_side", "value": "rice"}
+		},
+		{
+			"id": "sides_guac",
+			"name": "Unlock Guacamole",
+			"description": "Add guacamole to your menu",
+			"category": "sides",
+			"cost": 200,
+			"tier": 1,
+			"position": {"x": 200, "y": 350},
+			"prerequisites": [],
+			"effect": {"type": "unlock_side", "value": "guac"}
+		},
+		{
+			"id": "helper_wake",
+			"name": "Wake the Helper",
+			"description": "Tap helper to fill ingredients",
+			"category": "helper",
+			"cost": 40,
+			"tier": 1,
+			"position": {"x": 1750, "y": 500},
+			"prerequisites": [],
+			"effect": {"type": "helper_wake", "value": true}
+		},
+		{
+			"id": "helper_auto",
+			"name": "Helper Auto-Fill",
+			"description": "Helper fills ingredients automatically",
+			"category": "helper",
+			"cost": 500,
+			"tier": 2,
+			"position": {"x": 1750, "y": 500},
+			"prerequisites": ["helper_wake"],
+			"effect": {"type": "helper_auto", "value": true}
+		},
+		{
+			"id": "ingredient_salsa",
+			"name": "Add Salsa",
+			"description": "Add salsa to all tacos (+$3/taco)",
+			"category": "menu",
+			"cost": 70,
+			"tier": 1,
+			"position": {"x": 1400, "y": 450},
+			"prerequisites": [],
+			"effect": {"type": "add_ingredient", "value": "salsa"}
+		},
+		{
+			"id": "ingredient_cilantro",
+			"name": "Add Cilantro",
+			"description": "Add cilantro to all tacos (+$3/taco)",
+			"category": "menu",
+			"cost": 130,
+			"tier": 1,
+			"position": {"x": 1400, "y": 450},
+			"prerequisites": [],
+			"effect": {"type": "add_ingredient", "value": "cilantro"}
+		},
+		{
+			"id": "ingredient_onion",
+			"name": "Add Onion",
+			"description": "Add onion to all tacos (+$3/taco)",
+			"category": "menu",
+			"cost": 180,
+			"tier": 1,
+			"position": {"x": 1400, "y": 450},
+			"prerequisites": [],
+			"effect": {"type": "add_ingredient", "value": "onion"}
+		},
+		{
+			"id": "ingredient_cheese",
+			"name": "Add Cheese",
+			"description": "Add cheese to all tacos (+$3/taco)",
+			"category": "menu",
+			"cost": 250,
+			"tier": 1,
+			"position": {"x": 1400, "y": 450},
+			"prerequisites": [],
+			"effect": {"type": "add_ingredient", "value": "cheese"}
+		},
+		{
+			"id": "ingredient_peppers",
+			"name": "Add Hot Peppers",
+			"description": "Add hot peppers to all tacos (+$3/taco)",
+			"category": "menu",
+			"cost": 350,
+			"tier": 1,
+			"position": {"x": 1400, "y": 450},
+			"prerequisites": [],
+			"effect": {"type": "add_ingredient", "value": "peppers"}
+		},
+		{
+			"id": "customer_choice_1",
+			"name": "Customer Choice I",
+			"description": "Customers can request to remove 1 ingredient",
+			"category": "special",
+			"cost": 500,
+			"tier": 1,
+			"position": {"x": 960, "y": 200},
+			"prerequisites": ["ingredient_salsa"],
+			"effect": {"type": "customer_choice", "value": 1},
+			"toggleable": true
+		},
+		{
+			"id": "customer_choice_2",
+			"name": "Customer Choice II",
+			"description": "Customers can request to remove 2 ingredients",
+			"category": "special",
+			"cost": 1200,
+			"tier": 2,
+			"position": {"x": 960, "y": 200},
+			"prerequisites": ["customer_choice_1"],
+			"effect": {"type": "customer_choice", "value": 2},
+			"toggleable": true
+		},
+		{
+			"id": "thief_beat_fast",
+			"name": "Quick Defeat",
+			"description": "Thief is defeated in 1 tap instead of 2",
+			"category": "special",
+			"cost": 400,
+			"tier": 1,
+			"position": {"x": 100, "y": 200},
+			"prerequisites": [],
+			"effect": {"type": "thief_taps", "value": 1}
+		},
+		{
+			"id": "thief_auto_money",
+			"name": "Auto-Collect Money",
+			"description": "Money auto-collected from counter",
+			"category": "special",
+			"cost": 2000,
+			"tier": 2,
+			"position": {"x": 100, "y": 200},
+			"prerequisites": ["thief_beat_fast"],
+			"effect": {"type": "auto_collect", "value": true}
+		}
+	]
+}

@@ -1,0 +1,288 @@
+================================================================================
+TORTILLA LEGEND - AI Art Generation Prompts
+================================================================================
+Art Style Guide: Bold cartoon, flat colors, thick black outlines (3-5px),
+vibrant warm palette (oranges, yellows, reds, greens), cartoon proportions,
+clean vector-like look, PNG sprites with transparent backgrounds.
+================================================================================
+
+
+PROMPT 1: Kitchen Background
+================================================================================
+Create a cartoon game background for a taco stand kitchen in landscape
+orientation (1920x1080 pixels).
+
+The kitchen is viewed from a top-down perspective showing the back counter
+of a Mexican food stall. The style is bold cartoon with flat colors and
+thick black outlines, similar to Brawl Stars or Overcooked.
+
+Layout from left to right:
+- LEFT SIDE: A grill/cooking station area with a dark metal surface
+- CENTER: A wooden cutting board / preparation area
+- RIGHT SIDE: An ingredient shelf area with space for bowls of toppings
+- BOTTOM CENTER: Space for a soda/drink machine
+- TOP LEFT: A small area for side dishes (chips, rice bowls)
+- The background wall should be warm-toned (terracotta tiles, wooden beams)
+- A small Mexican flag or paper banner decoration on the wall
+- The counter surface should be light wood or white tile
+
+The scene should feel like a small, cozy street food stall. No characters
+in the image. Just the empty kitchen/workspace ready for cooking.
+Flat colors, bold outlines, no gradients.
+
+
+PROMPT 2: Helper Character (Male Chef)
+================================================================================
+Create a cartoon game character sprite sheet for a male chef helper character.
+Bold cartoon style with flat colors and thick black outlines, like Brawl Stars.
+
+Show the character in these poses/frames arranged in a horizontal strip,
+each frame 110x110 pixels:
+
+Frame 1 (Sleeping): The chef is sitting/leaning against the right wall,
+eyes closed, mouth slightly open, wearing a white chef hat and apron over
+a simple shirt. Arms crossed or resting. Peaceful sleeping expression.
+
+Frame 2 (Waking Up): Same chef, eyes popping open in surprise, one arm
+reaching forward, mouth open in an "oh!" expression. Slight lean forward.
+
+Frame 3 (Working/Active): Chef standing upright, arms extended forward
+as if handing something or working. Alert happy expression, slight smile.
+
+Character design: Round friendly face, small black mustache, white chef
+hat (toque), white apron, brown skin, simple cartoon style. Male.
+Full body visible from waist up. Warm friendly design.
+
+
+PROMPT 3: Customer Characters
+================================================================================
+Create a cartoon game sprite sheet showing 5 different customer characters
+for a taco stand game. Bold cartoon style with flat colors and thick black
+outlines.
+
+Each customer should be a HALF-BODY character (visible from waist up,
+designed to appear behind a counter). Each character is 120x150 pixels.
+Arrange them in a horizontal row.
+
+Customer 1: Young woman, red shirt, ponytail hair, cheerful smile
+Customer 2: Older man, blue shirt, glasses, mustache, neutral expression
+Customer 3: Teenager, green hoodie, backwards cap, impatient look
+Customer 4: Woman with headscarf, purple dress, kind smile
+Customer 5: Large man, orange shirt, bald, friendly grin
+
+All characters should have:
+- Different colored clothing (to easily distinguish them)
+- Simple cartoon proportions
+- Visible facial expressions
+- Facing forward toward the viewer (behind a counter)
+- Bold black outlines, flat solid colors
+- No background (transparent/white)
+
+
+PROMPT 4: Thief Character
+================================================================================
+Create a cartoon game character sprite of a classic burglar/thief for a
+taco stand game. Bold cartoon style with flat colors and thick black
+outlines.
+
+Show the thief in these poses arranged horizontally, each frame 100x120 pixels:
+
+Frame 1 (Sneaking): The thief tiptoeing, hunched over, wearing a
+black-and-white striped shirt, black eye mask (domino mask), black beanie
+hat, carrying a brown sack over his shoulder. Sneaky grin.
+
+Frame 2 (Stealing): Same thief, one arm extended reaching toward the
+viewer (toward the counter), hand open grabbing for money coins.
+Eager expression.
+
+Frame 3 (Hit/Stunned): Thief recoiling, stars around head, dizzy
+expression, arms flailing. Being "beat up" reaction.
+
+Frame 4 (Running Away): Thief fleeing to the left, sack over shoulder,
+looking back over shoulder nervously.
+
+Character design: Classic cartoon burglar - striped shirt, mask, beanie,
+round cartoon body. Small/short build. Sneaky but not scary - more
+funny than threatening.
+
+
+PROMPT 5: Kitchen Equipment & Stations
+================================================================================
+Create a cartoon game sprite sheet showing taco stand kitchen equipment.
+Bold cartoon style with flat colors and thick black outlines. Each item
+is a separate sprite on a transparent background.
+
+Items to include (arranged in a grid):
+
+1. GRILL (200x150px): A flat-top grill with 4 circular burner spots.
+Dark gray metal surface, slightly worn. Simple cartoon style.
+Empty/unused state.
+
+2. TORTILLA STATION (180x120px): A wooden cutting board/countertop
+with a flour tortilla flat on it. Warm wood color. Clean surface
+around the tortilla.
+
+3. SODA MACHINE (100x160px): A red/orange soda fountain machine with
+a cup dispensing area at the bottom. Cartoon style, slightly chunky
+proportions. Like a simplified soda fountain.
+
+4. TOPPING BOWLS (200x100px): A row of 3 small ceramic bowls on a
+shelf - one with green lettuce, one with red tomato, one with green
+salsa. Colorful ingredients visible.
+
+5. SIDE DISHES SHELF (150x80px): A small shelf with a bowl of yellow
+chips, a bowl of white rice, and a bowl of green guacamole.
+
+6. SERVING COUNTER (250x60px): A simple wooden counter edge where
+food is served to customers.
+
+All items: Bold outlines, flat colors, no gradients. Consistent with
+each other in style.
+
+
+PROMPT 6: Food & Ingredients
+================================================================================
+Create a cartoon game sprite sheet showing taco ingredients and food
+items for a taco stand game. Bold cartoon style with flat colors and
+thick black outlines. Each item is isolated on transparent background,
+arranged in a grid.
+
+Items:
+
+1. FLOUR TORTILLA - Plain, round, slightly golden, flat view from
+   above. 80x80px.
+
+2. TORTILLA WITH INGREDIENTS (3 stages):
+   - Stage 1: Tortilla with just lettuce and tomato on it. 80x80px.
+   - Stage 2: Tortilla with lettuce, tomato, and meat. 80x80px.
+   - Stage 3: Fully loaded tortilla with all ingredients + salsa.
+     80x80px.
+
+3. RAW MEAT (on grill): A pink/red piece of meat, rectangular cut.
+   60x60px.
+
+4. COOKED MEAT: Same piece but brown/charred, slightly sizzling.
+   60x60px.
+
+5. BURNT MEAT: Blackened, charred, with small smoke wisps. 60x60px.
+
+6. LETTUCE LEAF: Single green lettuce leaf. 40x30px.
+
+7. TOMATO SLICE: Single red tomato slice. 30x30px.
+
+8. SALSA DOLLOP: Green salsa in a small spoonful shape. 30x30px.
+
+9. CHIPS BOWL: Small bowl of yellow tortilla chips. 60x50px.
+
+10. RICE BOWL: Small bowl of white Mexican rice. 60x50px.
+
+11. GUACAMOLE BOWL: Small bowl of green guacamole. 60x50px.
+
+12. SODA CUP: Red disposable cup with lid and straw. 30x60px.
+
+13. SODA CUP FILLED: Same cup but with visible dark liquid inside.
+    30x60px.
+
+14. WRAPPED TACO: Completed taco wrapped in foil/paper, ready to
+    serve. 70x50px.
+
+All items: Bold outlines, flat solid colors, cartoon style, no textures.
+
+
+PROMPT 7: UI Elements
+================================================================================
+Create a cartoon game UI sprite sheet for a taco stand mobile game.
+Bold cartoon style with flat colors and thick black outlines.
+Landscape layout.
+
+Elements to include:
+
+1. PLAY BUTTON (200x80px): Green rounded rectangle button with white
+   "PLAY" text. Cartoon style, slightly 3D with drop shadow.
+   Thumb-friendly size.
+
+2. KITCHEN BUTTON (200x80px): Orange rounded rectangle button with
+   white "KITCHEN" text. Same style as play button.
+
+3. PAUSE BUTTON (60x60px): Orange circle with white "||" pause icon.
+
+4. PATIENCE BAR (120x20px): A horizontal bar frame - green on left,
+   red on right gradient placeholder. Cartoon border.
+
+5. MONEY ICON (30x30px): A golden coin with "$" symbol. Simple flat
+   design.
+
+6. TIMER ICON (30x30px): A round clock icon with hands. Simple
+   cartoon.
+
+7. DAY COUNTER BACKGROUND (400x100px): A warm-colored (terracotta/
+   orange) decorative frame/badge for displaying "Day X" text.
+   Slightly worn Mexican tile pattern feel. No text.
+
+8. SPEECH BUBBLE (100x80px): A white cartoon speech bubble with a
+   small tail pointing down. Empty interior for placing order icons.
+
+9. UPGRADE CARD (150x200px): A rounded rectangle card with space for
+   an icon, name, description, and price. Warm yellow/cream color
+   with brown border.
+
+10. UPGRADE LOCKED CARD (150x200px): Same card but grayed out with
+    a lock icon overlay.
+
+11. SUMMARY BACKGROUND (600x400px): A decorative frame for the day
+    summary screen. Warm Mexican tile style border, cream/white
+    interior space. No text.
+
+All UI elements: Bold outlines, flat colors, mobile-friendly sizes,
+consistent cartoon style.
+
+
+PROMPT 8: Background/Main Menu
+================================================================================
+Create a cartoon game main menu background for a taco stand game called
+"Tortilla Legend". Landscape orientation (1920x1080 pixels).
+
+The scene shows a front view of a Mexican taco street food stall/stand.
+Bold cartoon style with flat colors and thick black outlines.
+
+Elements:
+- A wooden/metal food cart or small stall structure
+- Colorful paper banner/papel picado decorations strung across the top
+- A small Mexican flag
+- Warm sunset-colored sky in the background (orange/yellow gradient sky)
+- Some simple cactus silhouettes in the far background
+- The stall has a warm, inviting feel - like a street food vendor
+  at golden hour
+- Warm lighting feel (achieved through color choices, not actual
+  lighting effects)
+
+The design should leave space in the center for:
+- Game title text at the top
+- Day counter in the middle
+- Play and Kitchen buttons at the bottom
+
+No characters in the image. Just the empty taco stand scene.
+Cozy, inviting, colorful. Bold outlines, flat colors.
+
+
+PROMPT 9: Upgrade Preview Icons
+================================================================================
+Create a set of small cartoon icons (60x60px each) representing upgrade
+categories for a taco stand game. Bold cartoon style, flat colors, thick
+black outlines. Arranged in a grid on transparent background.
+
+Icons:
+1. FIRE/FLAME icon (for grill upgrades) - orange/red flame
+2. TORTILLA icon (for tortilla upgrades) - round flour tortilla
+3. TOPPING BOWL icon (for topping upgrades) - small bowl with spoon
+4. SODA CUP icon (for drink upgrades) - red cup with straw
+5. CHIP BOWL icon (for side upgrades) - bowl of chips
+6. HELPER/CHEF icon (for helper upgrades) - small chef hat
+7. COIN STACK icon (for money/profit upgrades) - stack of gold coins
+8. SPEED icon (for speed upgrades) - small lightning bolt
+9. STAR icon (for quality upgrades) - golden star
+10. LOCK icon (for locked items) - simple padlock
+11. CHECKMARK icon (for completed items) - green checkmark
+12. ARROW RIGHT icon (for progression) - right-pointing arrow
+
+All: Bold outlines, flat colors, simple readable shapes.

@@ -1,0 +1,33 @@
+{
+	"base_recipe": {
+		"name": "Classic Tortilla",
+		"base_ingredients": ["lettuce", "tomato"],
+		"optional_ingredients": ["salsa", "cilantro", "onion", "cheese", "peppers"]
+	},
+	"sides": {
+		"chips": {
+			"name": "Chips",
+			"prep_type": "quick",
+			"base_price": 3,
+			"unlock_upgrade": "sides_chips"
+		},
+		"rice": {
+			"name": "Rice",
+			"prep_type": "prep",
+			"base_price": 4,
+			"unlock_upgrade": "sides_rice"
+		},
+		"guac": {
+			"name": "Guacamole",
+			"prep_type": "prep",
+			"base_price": 5,
+			"unlock_upgrade": "sides_guac"
+		}
+	},
+	"drinks": {
+		"soda": {
+			"name": "Soda",
+			"base_price": 2
+		}
+	}
+}
