@@ -37,22 +37,14 @@ jobs:
 
       - name: Install Android SDK Packages
         run: |
-          yes | sdkmanager --install "platforms;android-34" "build-tools;34.0.0" 2>&1 || true
-          echo "=== Installed packages ==="
-          sdkmanager --list_installed 2>&1 || true
-          echo "=== ANDROID_HOME ==="
-          echo "$ANDROID_HOME"
-          echo "=== platforms dir ==="
-          ls "$ANDROID_HOME/platforms/" 2>/dev/null || echo "No platforms dir"
-          echo "=== build-tools dir ==="
-          ls "$ANDROID_HOME/build-tools/" 2>/dev/null || echo "No build-tools dir"
+          sdkmanager --install "platforms;android-34" "build-tools;34.0.0"
 
       - name: Download Godot
         run: |
           wget -q https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
           unzip Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
-          mv Godot_v${GODOT_VERSION}-stable_linux.x86_64 godot
-          chmod +x godot
+          mv Godot_v${GODOT_VERSION}-stable_linux.x86_64 /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
 
       - name: Download Export Templates
         run: |
@@ -66,6 +58,17 @@ jobs:
         run: |
           TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
           unzip -q "$TEMPLATES_DIR/android_source.zip" -d android
+          echo "${GODOT_VERSION}.stable" > android/.build_version
+          echo "=== android/.build_version ==="
+          cat android/.build_version
+
+      - name: Configure Editor Settings
+        run: |
+          mkdir -p ~/.config/godot
+          echo "[EditorSettings]" > ~/.config/godot/editor_settings-4.3.tres
+          echo "export/android/java_sdk_path = \"/usr/lib/jvm/java-17-openjdk-amd64\"" >> ~/.config/godot/editor_settings-4.3.tres
+          echo "=== editor settings ==="
+          cat ~/.config/godot/editor_settings-4.3.tres
 
       - name: Create Keystore
         run: |
@@ -84,16 +87,34 @@ jobs:
           sed -i "s|keystore/debug=\"\"|keystore/debug=\"${KEYPATH}\"|g" export_presets.cfg
           sed -i "s|keystore/debug_user=\"\"|keystore/debug_user=\"androiddebugkey\"|g" export_presets.cfg
           sed -i "s|keystore/debug_password=\"\"|keystore/debug_password=\"android\"|g" export_presets.cfg
+          echo "--- export_presets.cfg ---"
           cat export_presets.cfg
 
-      - name: Import Project
+      - name: Generate Export Credentials
         run: |
-          timeout 60 ./godot --headless --import 2>&1 || true
+          mkdir -p .godot
+          KEYPATH="$GITHUB_WORKSPACE/debug.keystore"
+          cat > .godot/export_credentials.cfg << EOF
+          [preset.0]
+          [preset.0.options]
+          keystore/debug="${KEYPATH}"
+          keystore/debug_user="androiddebugkey"
+          keystore/debug_password="android"
+          EOF
+          echo "=== export_credentials.cfg ==="
+          cat .godot/export_credentials.cfg
 
-      - name: Build APK (with verbose)
+      - name: Pre-heat Godot Cache (editor --quit)
+        run: |
+          godot --headless --editor --quit 2>&1 || true
+          echo "=== .godot after editor ==="
+          ls -la .godot/
+          ls -la .godot/editor/ 2>/dev/null || true
+
+      - name: Build APK
         run: |
           mkdir -p build
-          ./godot --headless --verbose --export-debug "Android" "build/${EXPORT_NAME}-debug.apk" 2>&1
+          godot --headless --verbose --export-debug "Android" "build/${EXPORT_NAME}-debug.apk" 2>&1
           echo "=== build/ contents ==="
           ls -la build/
 
