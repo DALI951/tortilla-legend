@@ -37,8 +37,15 @@ jobs:
 
       - name: Install Android SDK Packages
         run: |
-          sdkmanager --install "platforms;android-34" "build-tools;34.0.0" "platform-tools"
-          sdkmanager --list_installed | head -20
+          yes | sdkmanager --install "platforms;android-34" "build-tools;34.0.0" 2>&1 || true
+          echo "=== Installed packages ==="
+          sdkmanager --list_installed 2>&1 || true
+          echo "=== ANDROID_HOME ==="
+          echo "$ANDROID_HOME"
+          echo "=== platforms dir ==="
+          ls "$ANDROID_HOME/platforms/" 2>/dev/null || echo "No platforms dir"
+          echo "=== build-tools dir ==="
+          ls "$ANDROID_HOME/build-tools/" 2>/dev/null || echo "No build-tools dir"
 
       - name: Download Godot
         run: |
@@ -54,14 +61,11 @@ jobs:
           wget -q https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           unzip -q Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           mv templates/* "$TEMPLATES_DIR/"
-          ls "$TEMPLATES_DIR/"
 
       - name: Install Android Build Template
         run: |
           TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
           unzip -q "$TEMPLATES_DIR/android_source.zip" -d android
-          echo "Android template contents:"
-          ls android/
 
       - name: Create Keystore
         run: |
@@ -80,31 +84,20 @@ jobs:
           sed -i "s|keystore/debug=\"\"|keystore/debug=\"${KEYPATH}\"|g" export_presets.cfg
           sed -i "s|keystore/debug_user=\"\"|keystore/debug_user=\"androiddebugkey\"|g" export_presets.cfg
           sed -i "s|keystore/debug_password=\"\"|keystore/debug_password=\"android\"|g" export_presets.cfg
-          echo "--- export_presets.cfg ---"
           cat export_presets.cfg
 
       - name: Import Project
         run: |
-          timeout 30 ./godot --headless --import 2>&1 || true
+          timeout 60 ./godot --headless --import 2>&1 || true
 
-      - name: Verify Project Config
-        run: |
-          echo "--- project.godot renderer ---"
-          grep -E "renderer|rendering|opengl|vulkan" project.godot || echo "no renderer config found"
-          echo "--- .godot folder ---"
-          ls -la .godot/ 2>/dev/null || echo "no .godot folder"
-          echo "--- android folder ---"
-          ls -la android/ 2>/dev/null || echo "no android folder"
-
-      - name: Build APK
+      - name: Build APK (with verbose)
         run: |
           mkdir -p build
-          ./godot --headless --export-debug "Android" "build/${EXPORT_NAME}-debug.apk"
-          echo "--- build output ---"
+          ./godot --headless --verbose --export-debug "Android" "build/${EXPORT_NAME}-debug.apk" 2>&1
+          echo "=== build/ contents ==="
           ls -la build/
 
       - name: Get Version
-        if: always()
         id: version
         run: |
           VERSION=$(date +'%Y%m%d')-$(echo $GITHUB_SHA | head -c 7)
