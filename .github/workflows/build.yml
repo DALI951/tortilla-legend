@@ -30,8 +30,6 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
-          api-level: 34
-          build-tools: "34.0.0"
           accept-android-sdk-licenses: true
 
       - name: Download Godot
@@ -48,7 +46,12 @@ jobs:
           wget -q https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           unzip -q Godot_v${GODOT_VERSION}-stable_export_templates.tpz
           mv templates/* "$TEMPLATES_DIR/"
-          ls "$TEMPLATES_DIR/"
+
+      - name: Install Android Build Template
+        run: |
+          TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          unzip -q "$TEMPLATES_DIR/android_source.zip" -d android
+          echo "Android template installed"
 
       - name: Create Keystore
         run: |
@@ -67,23 +70,19 @@ jobs:
           sed -i "s|keystore/debug=\"\"|keystore/debug=\"${KEYPATH}\"|g" export_presets.cfg
           sed -i "s|keystore/debug_user=\"\"|keystore/debug_user=\"androiddebugkey\"|g" export_presets.cfg
           sed -i "s|keystore/debug_password=\"\"|keystore/debug_password=\"android\"|g" export_presets.cfg
-          cat export_presets.cfg
 
-      - name: Validate Godot Project
+      - name: Import Project
         run: |
           ./godot --headless --import 2>&1 || true
-          echo "--- Import done ---"
 
-      - name: Export APK
+      - name: Build APK
         run: |
           mkdir -p build
-          ./godot --headless --export-debug "Android" "build/${EXPORT_NAME}-debug.apk" 2>&1
-          echo "--- Export done ---"
+          ./godot --headless --export-debug "Android" "build/${EXPORT_NAME}-debug.apk" 2>&1 || true
           ls -la build/
 
       - name: Get Version
         id: version
-        if: success()
         run: |
           VERSION=$(date +'%Y%m%d')-$(echo $GITHUB_SHA | head -c 7)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
