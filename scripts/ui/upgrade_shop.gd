@@ -1,11 +1,10 @@
 extends Control
 
-@onready var money_label: Label = $MoneyLabel
-@onready var back_button: Button = $BackButton
-@onready var next_day_button: Button = $NextDayButton
-@onready var upgrade_container: Control = $UpgradeContainer
+@onready var money_label: Label = $TopBar/MoneyLabel
+@onready var back_button: Button = $BottomBar/BackButton
+@onready var next_day_button: Button = $BottomBar/NextDayButton
+@onready var upgrade_container: VBoxContainer = $ScrollContainer/UpgradeContainer
 
-var upgrade_card_scene: PackedScene = null
 var upgrades_data: Array = []
 
 func _ready() -> void:
@@ -32,91 +31,77 @@ func load_upgrades() -> void:
 func display_upgrades() -> void:
 	for child in upgrade_container.get_children():
 		child.queue_free()
-	
-	var x_offset: float = 50.0
-	var y_offset: float = 10.0
-	var card_width: float = 160.0
-	var card_height: float = 200.0
-	var spacing: float = 15.0
-	
+
 	for upgrade in upgrades_data:
 		var upgrade_id: String = upgrade.get("id", "")
 		var is_purchased: bool = GameManager.has_upgrade(upgrade_id)
 		var prereqs_met: bool = _check_prerequisites(upgrade.get("prerequisites", []))
 		var can_afford: bool = GameManager.money >= upgrade.get("cost", 0)
 		var is_available: bool = not is_purchased and prereqs_met and can_afford
-		
 		var card: PanelContainer = _create_upgrade_card(upgrade, is_purchased, is_available)
-		card.position = Vector2(x_offset, y_offset)
 		upgrade_container.add_child(card)
-		
-		x_offset += card_width + spacing
-		if x_offset > 1700.0:
-			x_offset = 50.0
-			y_offset += card_height + spacing
 
 func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available: bool) -> PanelContainer:
 	var card: PanelContainer = PanelContainer.new()
-	card.custom_minimum_size = Vector2(150, 190)
-	
+	card.custom_minimum_size = Vector2(0, 120)
+	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
 	var style: StyleBoxFlat = StyleBoxFlat.new()
 	if is_purchased:
 		style.bg_color = Color(0.6, 0.85, 0.6, 1)
 	elif is_available:
 		style.bg_color = Color(1.0, 0.95, 0.85, 1)
 	else:
-		style.bg_color = Color(0.75, 0.75, 0.75, 1)
+		style.bg_color = Color(0.85, 0.85, 0.85, 1)
 	style.border_color = Color(0.3, 0.2, 0.1, 1)
-	style.border_width_bottom = 2
-	style.border_width_top = 2
-	style.border_width_left = 2
-	style.border_width_right = 2
-	style.corner_radius_top_left = 8
-	style.corner_radius_top_right = 8
-	style.corner_radius_bottom_left = 8
-	style.corner_radius_bottom_right = 8
-	style.content_margin_left = 10
-	style.content_margin_right = 10
-	style.content_margin_top = 10
-	style.content_margin_bottom = 10
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(8)
+	style.set_content_margin_all(12)
 	card.add_theme_stylebox_override("panel", style)
-	
-	var vbox: VBoxContainer = VBoxContainer.new()
-	card.add_child(vbox)
-	
+
+	var hbox: HBoxContainer = HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 12)
+	card.add_child(hbox)
+
+	var info_vbox: VBoxContainer = VBoxContainer.new()
+	info_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox.add_child(info_vbox)
+
 	var name_label: Label = Label.new()
 	name_label.text = upgrade.get("name", "Upgrade")
-	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vbox.add_child(name_label)
-	
+	name_label.add_theme_font_size_override("font_size", 18)
+	info_vbox.add_child(name_label)
+
 	var desc_label: Label = Label.new()
 	desc_label.text = upgrade.get("description", "")
-	desc_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vbox.add_child(desc_label)
-	
-	var spacer: Control = Control.new()
-	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	vbox.add_child(spacer)
-	
+	desc_label.add_theme_font_size_override("font_size", 14)
+	info_vbox.add_child(desc_label)
+
+	var right_vbox: VBoxContainer = VBoxContainer.new()
+	right_vbox.custom_minimum_size = Vector2(120, 0)
+	right_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	hbox.add_child(right_vbox)
+
 	if is_purchased:
 		var owned_label: Label = Label.new()
 		owned_label.text = "OWNED"
 		owned_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		vbox.add_child(owned_label)
+		owned_label.add_theme_color_override("font_color", Color(0.2, 0.5, 0.2))
+		right_vbox.add_child(owned_label)
 	else:
 		var cost_label: Label = Label.new()
 		cost_label.text = "$%d" % upgrade.get("cost", 0)
 		cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		vbox.add_child(cost_label)
-		
+		cost_label.add_theme_font_size_override("font_size", 20)
+		right_vbox.add_child(cost_label)
+
 		if is_available:
 			var buy_button: Button = Button.new()
 			buy_button.text = "BUY"
 			buy_button.pressed.connect(_on_buy_pressed.bind(upgrade))
-			vbox.add_child(buy_button)
-	
+			right_vbox.add_child(buy_button)
+
 	return card
 
 func _check_prerequisites(prereqs: Array) -> bool:
@@ -129,6 +114,7 @@ func _on_buy_pressed(upgrade: Dictionary) -> void:
 	var upgrade_id: String = upgrade.get("id", "")
 	var cost: int = upgrade.get("cost", 0)
 	if GameManager.purchase_upgrade(upgrade_id, cost):
+		FeedbackManager.vibrate_medium()
 		display_upgrades()
 		update_money()
 

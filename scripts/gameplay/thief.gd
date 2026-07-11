@@ -20,9 +20,9 @@ func _process(delta: float) -> void:
 	if not is_active or is_defeated:
 		return
 	position.x += direction * move_speed * delta
-	if direction > 0 and position.x >= 1800:
+	if direction > 0 and position.x >= 980:
 		_reach_end()
-	elif direction < 0 and position.x <= 120:
+	elif direction < 0 and position.x <= 100:
 		_reach_end()
 
 func activate(counter_money: int) -> void:
@@ -39,6 +39,7 @@ func tap_thief() -> void:
 	if not is_active or is_defeated:
 		return
 	taps_received += 1
+	FeedbackManager.vibrate_light()
 	if taps_received >= taps_needed:
 		_defeat()
 
@@ -46,6 +47,7 @@ func _defeat() -> void:
 	is_defeated = true
 	is_active = false
 	visible = false
+	FeedbackManager.vibrate_heavy()
 	thief_defeated.emit(stolen_amount)
 
 func _reach_end() -> void:

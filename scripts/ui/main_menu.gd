@@ -6,6 +6,8 @@ extends Control
 @onready var settings_button: Button = $SettingsButton
 
 func _ready() -> void:
+	if SaveManager.has_save():
+		SaveManager.load_game()
 	update_display()
 	play_button.pressed.connect(_on_play_pressed)
 	kitchen_button.pressed.connect(_on_kitchen_pressed)
@@ -19,10 +21,7 @@ func update_display() -> void:
 		play_button.text = LocalizationManager.tr_key("play")
 
 func _on_play_pressed() -> void:
-	if SaveManager.has_save():
-		GameManager.continue_game()
-	else:
-		GameManager.start_new_game()
+	GameManager.start_new_game() if not SaveManager.has_save() else GameManager.continue_game()
 	get_tree().change_scene_to_file("res://scenes/gameplay.tscn")
 
 func _on_kitchen_pressed() -> void:
@@ -30,4 +29,4 @@ func _on_kitchen_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/kitchen_shop.tscn")
 
 func _on_settings_pressed() -> void:
-	pass
+	get_tree().change_scene_to_file("res://scenes/settings_scene.tscn")

@@ -3,7 +3,6 @@ extends Node2D
 signal customer_spawned(customer: Node2D)
 signal all_customers_served()
 
-var customer_scene: PackedScene = null
 var max_customers: int = 5
 var customers_spawned: int = 0
 var customers_active: int = 0
@@ -15,22 +14,20 @@ var customer_slots: Array[Vector2] = []
 var occupied_slots: Dictionary = {}
 
 func _ready() -> void:
-	customer_scene = preload("res://scenes/gameplay.tscn")
 	GameManager.day_started.connect(_on_day_started)
 	_calculate_slots()
 
-func _on_day_started(day: int) -> void:
+func _on_day_started(_day: int) -> void:
 	max_customers = GameManager.get_customer_count_for_day()
 	customers_spawned = 0
 	customers_active = 0
 	occupied_slots.clear()
-	spawn_timer = 1.0
+	spawn_timer = 1.5
 	is_spawning = true
 
 func _process(delta: float) -> void:
 	if not is_spawning:
 		return
-	
 	spawn_timer -= delta
 	if spawn_timer <= 0:
 		if customers_spawned < max_customers:
@@ -41,23 +38,23 @@ func _process(delta: float) -> void:
 
 func _calculate_slots() -> void:
 	customer_slots.clear()
-	var slot_width: float = 200.0
-	var start_x: float = 200.0
+	var slot_width: float = 160.0
+	var start_x: float = 100.0
 	var y: float = 200.0
-	for i in range(8):
+	for i in range(6):
 		customer_slots.append(Vector2(start_x + i * slot_width, y))
 
 func _spawn_customer() -> void:
 	var slot_idx: int = _find_free_slot()
 	if slot_idx == -1:
 		return
-	
-	var customer: CharacterBody2D = CharacterBody2D.new()
+
+	var customer: Node2D = Node2D.new()
 	customer.set_script(load("res://scripts/gameplay/customer.gd"))
 	customer.position = customer_slots[slot_idx]
-	
+
 	var sprite: ColorRect = ColorRect.new()
-	sprite.custom_minimum_size = Vector2(120, 150)
+	sprite.custom_minimum_size = Vector2(100, 130)
 	var colors: Array[Color] = [
 		Color(0.9, 0.3, 0.3),
 		Color(0.3, 0.5, 0.9),
@@ -66,11 +63,18 @@ func _spawn_customer() -> void:
 		Color(0.9, 0.6, 0.2)
 	]
 	sprite.color = colors[customers_spawned % colors.size()]
-	sprite.position = Vector2(-60, -75)
+	sprite.position = Vector2(-50, -65)
 	customer.add_child(sprite)
-	
+
+	var name_label: Label = Label.new()
+	name_label.position = Vector2(-50, 70)
+	name_label.custom_minimum_size = Vector2(100, 20)
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_label.add_theme_font_size_override("font_size", 14)
+	customer.add_child(name_label)
+
 	add_child(customer)
-	customer.customer_impaired.connect(_on_customer_impatient.bind(customer))
+	customer.customer_impatient.connect(_on_customer_impatient.bind(customer))
 	customer.order_completed.connect(_on_customer_served.bind(customer))
 	occupied_slots[slot_idx] = customer
 	customers_spawned += 1

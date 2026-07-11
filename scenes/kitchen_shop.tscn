@@ -20,61 +20,81 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.75, 0.65, 0.55, 1)
 
-[node name="Title" type="Label" parent="."]
+[node name="TopBar" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+grow_horizontal = 2
+
+[node name="Title" type="Label" parent="TopBar"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -200.0
-offset_top = 30.0
+offset_top = 10.0
 offset_right = 200.0
-offset_bottom = 80.0
+offset_bottom = 60.0
 grow_horizontal = 2
 text = "KITCHEN"
 horizontal_alignment = 1
 
-[node name="MoneyLabel" type="Label" parent="."]
+[node name="MoneyLabel" type="Label" parent="TopBar"]
 layout_mode = 1
 offset_left = 30.0
-offset_top = 30.0
+offset_top = 15.0
 offset_right = 230.0
-offset_bottom = 70.0
+offset_bottom = 60.0
 text = "$0"
 
-[node name="BackButton" type="Button" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 80.0
+offset_bottom = -120.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UpgradeContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BottomBar" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="BackButton" type="Button" parent="BottomBar"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
-anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -100.0
+offset_left = 30.0
 offset_top = -80.0
-offset_right = 100.0
+offset_right = 250.0
 offset_bottom = -20.0
 grow_vertical = 0
 text = "BACK"
 
-[node name="NextDayButton" type="Button" parent="."]
+[node name="NextDayButton" type="Button" parent="BottomBar"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -200.0
+offset_left = -280.0
 offset_top = -80.0
 offset_right = -30.0
 offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "NEXT DAY"
-
-[node name="UpgradeContainer" type="Control" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 100.0
-offset_bottom = -120.0
-grow_horizontal = 2
-grow_vertical = 2
