@@ -47,11 +47,12 @@ func _process(delta: float) -> void:
 
 func _calculate_slots() -> void:
 	customer_slots.clear()
-	var slot_width: float = 170.0
-	var start_x: float = 85.0
-	var y: float = 150.0
-	for i in range(6):
-		customer_slots.append(Vector2(start_x + i * slot_width, y))
+	var cols: int = 4
+	var start_x: float = 120.0
+	var gap_x: float = 240.0
+	var row_y: float = 130.0
+	for i in range(cols):
+		customer_slots.append(Vector2(start_x + i * gap_x, row_y))
 
 func _spawn_customer() -> void:
 	var slot_idx: int = _find_free_slot()
@@ -65,30 +66,30 @@ func _spawn_customer() -> void:
 	var color: Color = customer_colors[customers_spawned % customer_colors.size()]
 
 	var body: ColorRect = ColorRect.new()
-	body.size = Vector2(80, 90)
-	body.position = Vector2(-40, -10)
+	body.size = Vector2(100, 110)
+	body.position = Vector2(-50, -15)
 	body.color = color
 	var body_style: StyleBoxFlat = StyleBoxFlat.new()
-	body_style.set_corner_radius_all(12)
+	body_style.set_corner_radius_all(14)
 	body_style.set_content_margin_all(0)
 	body.add_theme_stylebox_override("panel", body_style)
 	customer.add_child(body)
 
 	var head: ColorRect = ColorRect.new()
-	head.size = Vector2(50, 50)
-	head.position = Vector2(-25, -60)
+	head.size = Vector2(60, 60)
+	head.position = Vector2(-30, -75)
 	head.color = Color(0.92, 0.78, 0.65)
 	var head_style: StyleBoxFlat = StyleBoxFlat.new()
-	head_style.set_corner_radius_all(25)
+	head_style.set_corner_radius_all(30)
 	head_style.set_content_margin_all(0)
 	head.add_theme_stylebox_override("panel", head_style)
 	customer.add_child(head)
 
 	var name_label: Label = Label.new()
-	name_label.position = Vector2(-60, 100)
-	name_label.custom_minimum_size = Vector2(120, 24)
+	name_label.position = Vector2(-70, 110)
+	name_label.custom_minimum_size = Vector2(140, 30)
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	name_label.add_theme_font_size_override("font_size", 16)
+	name_label.add_theme_font_size_override("font_size", 22)
 	name_label.text = _get_customer_name()
 	customer.add_child(name_label)
 

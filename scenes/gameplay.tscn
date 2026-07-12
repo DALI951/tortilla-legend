@@ -24,37 +24,36 @@ color = Color(0.96, 0.93, 0.87, 1)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 120.0
+offset_bottom = 140.0
 grow_horizontal = 2
+
+[node name="MoneyLabel" type="Label" parent="HUD"]
+layout_mode = 1
+offset_left = 30.0
+offset_top = 20.0
+offset_right = 400.0
+offset_bottom = 90.0
+text = "$0"
 
 [node name="TimerLabel" type="Label" parent="HUD"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -250.0
-offset_top = 15.0
-offset_right = -20.0
-offset_bottom = 75.0
+offset_left = -300.0
+offset_top = 20.0
+offset_right = -30.0
+offset_bottom = 90.0
 grow_horizontal = 0
 text = "30s"
 horizontal_alignment = 2
 
-[node name="MoneyLabel" type="Label" parent="HUD"]
-layout_mode = 1
-offset_left = 20.0
-offset_top = 15.0
-offset_right = 300.0
-offset_bottom = 75.0
-text = "$0"
-
 [node name="PauseButton" type="Button" parent="HUD"]
 layout_mode = 1
-anchors_preset = 0
-offset_left = 20.0
-offset_top = 10.0
-offset_right = 100.0
-offset_bottom = 70.0
+offset_left = 30.0
+offset_top = 95.0
+offset_right = 180.0
+offset_bottom = 140.0
 text = "||"
 
 [node name="EventLabel" type="Label" parent="HUD"]
@@ -62,10 +61,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -350.0
-offset_top = 80.0
-offset_right = 350.0
-offset_bottom = 120.0
+offset_left = -400.0
+offset_top = 95.0
+offset_right = 400.0
+offset_bottom = 140.0
 grow_horizontal = 2
 text = ""
 horizontal_alignment = 1
@@ -74,8 +73,8 @@ horizontal_alignment = 1
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 120.0
-offset_bottom = 950.0
+offset_top = 140.0
+offset_bottom = 720.0
 grow_horizontal = 2
 
 [node name="AreaBG" type="ColorRect" parent="CustomerArea"]
@@ -94,7 +93,7 @@ anchor_right = 1.0
 offset_left = 20.0
 offset_top = 10.0
 offset_right = -20.0
-offset_bottom = 60.0
+offset_bottom = 70.0
 grow_horizontal = 2
 text = "CUSTOMERS"
 horizontal_alignment = 1
@@ -103,10 +102,10 @@ horizontal_alignment = 1
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 20.0
-offset_top = 60.0
-offset_right = -20.0
-offset_bottom = 120.0
+offset_left = 30.0
+offset_top = 70.0
+offset_right = -30.0
+offset_bottom = 140.0
 grow_horizontal = 2
 text = ""
 horizontal_alignment = 1
@@ -117,28 +116,27 @@ layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_left = 40.0
-offset_top = 130.0
+offset_top = 150.0
 offset_right = -40.0
-offset_bottom = 180.0
+offset_bottom = 210.0
 grow_horizontal = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 12
 
 [node name="CustomerContainer" type="Control" parent="CustomerArea"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 190.0
+offset_top = 220.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="KitchenArea" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 0.5
+anchors_preset = 10
 anchor_right = 1.0
+anchor_top = 0.375
 anchor_bottom = 1.0
-offset_top = -50.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -155,10 +153,10 @@ color = Color(0.75, 0.65, 0.55, 1)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 20.0
+offset_left = 30.0
 offset_top = 30.0
-offset_right = -20.0
-offset_bottom = 100.0
+offset_right = -30.0
+offset_bottom = 120.0
 grow_horizontal = 2
 text = "KITCHEN"
 horizontal_alignment = 1
@@ -167,35 +165,33 @@ horizontal_alignment = 1
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 20.0
-offset_top = 100.0
-offset_right = -20.0
-offset_bottom = 160.0
+offset_left = 30.0
+offset_top = 120.0
+offset_right = -30.0
+offset_bottom = 200.0
 grow_horizontal = 2
 text = ""
 horizontal_alignment = 1
 
 [node name="ActionButton" type="Button" parent="KitchenArea"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 200.0
-offset_right = 300.0
-offset_bottom = 340.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 60.0
+offset_top = 280.0
+offset_right = -60.0
+offset_bottom = 500.0
 grow_horizontal = 2
 text = "ACTION"
 
 [node name="ServeButton" type="Button" parent="KitchenArea"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 400.0
-offset_right = 300.0
-offset_bottom = 540.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 60.0
+offset_top = 560.0
+offset_right = -60.0
+offset_bottom = 740.0
 grow_horizontal = 2
 text = "SERVE"
 

@@ -1,10 +1,10 @@
 extends Control
 
-@onready var back_button: Button = $Panel/VBox/BackButton
-@onready var lang_button: Button = $Panel/VBox/LanguageButton
-@onready var sfx_slider: HSlider = $Panel/VBox/SFXSlider
-@onready var sfx_label: Label = $Panel/VBox/SFXBox/SFXValue
-@onready var choice_toggle: CheckButton = $Panel/VBox/ChoiceToggle
+@onready var back_button: Button = $VBox/BackButton
+@onready var lang_button: Button = $VBox/LanguageButton
+@onready var sfx_slider: HSlider = $VBox/SFXSlider
+@onready var sfx_label: Label = $VBox/SFXValue
+@onready var choice_toggle: CheckButton = $VBox/ChoiceToggle
 
 func _ready() -> void:
 	back_button.pressed.connect(_on_back_pressed)
@@ -15,13 +15,13 @@ func _ready() -> void:
 	_update_display()
 
 func _apply_fonts() -> void:
-	$Panel/VBox/Title.add_theme_font_size_override("font_size", 36)
-	$Panel/VBox/LanguageLabel.add_theme_font_size_override("font_size", 24)
-	lang_button.add_theme_font_size_override("font_size", 24)
-	$Panel/VBox/SFXBox/SFXLabel.add_theme_font_size_override("font_size", 24)
-	sfx_label.add_theme_font_size_override("font_size", 24)
-	choice_toggle.add_theme_font_size_override("font_size", 24)
-	back_button.add_theme_font_size_override("font_size", 28)
+	$VBox/Title.add_theme_font_size_override("font_size", 56)
+	$VBox/LanguageLabel.add_theme_font_size_override("font_size", 36)
+	lang_button.add_theme_font_size_override("font_size", 36)
+	$VBox/SFXLabel.add_theme_font_size_override("font_size", 36)
+	sfx_label.add_theme_font_size_override("font_size", 36)
+	choice_toggle.add_theme_font_size_override("font_size", 32)
+	back_button.add_theme_font_size_override("font_size", 40)
 
 func _update_display() -> void:
 	lang_button.text = LocalizationManager.tr_key("language") + ": " + LocalizationManager.current_language.upper()

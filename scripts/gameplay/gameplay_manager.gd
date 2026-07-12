@@ -61,16 +61,16 @@ func _ready() -> void:
 		_start_day_logic(GameManager.current_day)
 
 func _apply_fonts() -> void:
-	timer_label.add_theme_font_size_override("font_size", 36)
-	money_label.add_theme_font_size_override("font_size", 36)
-	pause_button.add_theme_font_size_override("font_size", 28)
-	station_label.add_theme_font_size_override("font_size", 32)
-	order_label.add_theme_font_size_override("font_size", 24)
-	progress_label.add_theme_font_size_override("font_size", 26)
-	action_button.add_theme_font_size_override("font_size", 32)
-	serve_button.add_theme_font_size_override("font_size", 36)
-	event_label.add_theme_font_size_override("font_size", 24)
-	$CustomerArea/CustomerLabel.add_theme_font_size_override("font_size", 28)
+	timer_label.add_theme_font_size_override("font_size", 48)
+	money_label.add_theme_font_size_override("font_size", 48)
+	pause_button.add_theme_font_size_override("font_size", 36)
+	station_label.add_theme_font_size_override("font_size", 42)
+	order_label.add_theme_font_size_override("font_size", 32)
+	progress_label.add_theme_font_size_override("font_size", 36)
+	action_button.add_theme_font_size_override("font_size", 48)
+	serve_button.add_theme_font_size_override("font_size", 48)
+	event_label.add_theme_font_size_override("font_size", 32)
+	$CustomerArea/CustomerLabel.add_theme_font_size_override("font_size", 36)
 
 func _build_required_list() -> void:
 	required_ingredients.clear()
@@ -255,8 +255,8 @@ func _update_ingredient_dots_tortilla() -> void:
 	_clear_ingredient_dots()
 	for i in range(tortilla_max):
 		var dot: ColorRect = ColorRect.new()
-		dot.custom_minimum_size = Vector2(40, 40)
-		dot.size = Vector2(40, 40)
+		dot.custom_minimum_size = Vector2(56, 56)
+		dot.size = Vector2(56, 56)
 		if i < tortilla_taps and i < required_ingredients.size():
 			dot.color = ingredient_colors.get(required_ingredients[i], Color.WHITE)
 		elif i < tortilla_taps:
@@ -264,7 +264,7 @@ func _update_ingredient_dots_tortilla() -> void:
 		else:
 			dot.color = Color(0.6, 0.55, 0.5, 0.5)
 		var style: StyleBoxFlat = StyleBoxFlat.new()
-		style.set_corner_radius_all(20)
+		style.set_corner_radius_all(28)
 		style.set_content_margin_all(0)
 		dot.add_theme_stylebox_override("panel", style)
 		ingredient_dots.add_child(dot)
@@ -274,14 +274,14 @@ func _update_ingredient_dots_toppings() -> void:
 	var all_toppings: Array[String] = _get_available_toppings()
 	for topping in all_toppings:
 		var dot: ColorRect = ColorRect.new()
-		dot.custom_minimum_size = Vector2(40, 40)
-		dot.size = Vector2(40, 40)
+		dot.custom_minimum_size = Vector2(56, 56)
+		dot.size = Vector2(56, 56)
 		if topping in taco_ingredients:
 			dot.color = ingredient_colors.get(topping, Color.WHITE)
 		else:
 			dot.color = Color(0.6, 0.55, 0.5, 0.5)
 		var style: StyleBoxFlat = StyleBoxFlat.new()
-		style.set_corner_radius_all(20)
+		style.set_corner_radius_all(28)
 		style.set_content_margin_all(0)
 		dot.add_theme_stylebox_override("panel", style)
 		ingredient_dots.add_child(dot)
@@ -290,11 +290,11 @@ func _update_ingredient_dots_done() -> void:
 	_clear_ingredient_dots()
 	for ingredient in taco_ingredients:
 		var dot: ColorRect = ColorRect.new()
-		dot.custom_minimum_size = Vector2(40, 40)
-		dot.size = Vector2(40, 40)
+		dot.custom_minimum_size = Vector2(56, 56)
+		dot.size = Vector2(56, 56)
 		dot.color = ingredient_colors.get(ingredient, Color.WHITE)
 		var style: StyleBoxFlat = StyleBoxFlat.new()
-		style.set_corner_radius_all(20)
+		style.set_corner_radius_all(28)
 		style.set_content_margin_all(0)
 		dot.add_theme_stylebox_override("panel", style)
 		ingredient_dots.add_child(dot)

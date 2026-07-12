@@ -14,13 +14,13 @@ func _ready() -> void:
 	display_summary()
 
 func _apply_fonts() -> void:
-	title_label.add_theme_font_size_override("font_size", 36)
-	money_earned.add_theme_font_size_override("font_size", 28)
-	customers_served.add_theme_font_size_override("font_size", 28)
-	customers_lost.add_theme_font_size_override("font_size", 28)
-	wrong_orders.add_theme_font_size_override("font_size", 28)
-	thief_losses.add_theme_font_size_override("font_size", 28)
-	continue_button.add_theme_font_size_override("font_size", 32)
+	title_label.add_theme_font_size_override("font_size", 52)
+	money_earned.add_theme_font_size_override("font_size", 36)
+	customers_served.add_theme_font_size_override("font_size", 36)
+	customers_lost.add_theme_font_size_override("font_size", 36)
+	wrong_orders.add_theme_font_size_override("font_size", 36)
+	thief_losses.add_theme_font_size_override("font_size", 36)
+	continue_button.add_theme_font_size_override("font_size", 44)
 
 func display_summary() -> void:
 	title_label.text = LocalizationManager.tr_key("day_complete") % GameManager.current_day

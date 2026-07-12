@@ -16,10 +16,10 @@ func _ready() -> void:
 	update_money()
 
 func _apply_fonts() -> void:
-	$TopBar/Title.add_theme_font_size_override("font_size", 36)
-	money_label.add_theme_font_size_override("font_size", 36)
-	back_button.add_theme_font_size_override("font_size", 28)
-	next_day_button.add_theme_font_size_override("font_size", 28)
+	$TopBar/Title.add_theme_font_size_override("font_size", 52)
+	money_label.add_theme_font_size_override("font_size", 48)
+	back_button.add_theme_font_size_override("font_size", 36)
+	next_day_button.add_theme_font_size_override("font_size", 36)
 
 func load_upgrades() -> void:
 	var file: FileAccess = FileAccess.open("res://data/upgrades.json", FileAccess.READ)
@@ -50,7 +50,7 @@ func display_upgrades() -> void:
 
 func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available: bool) -> PanelContainer:
 	var card: PanelContainer = PanelContainer.new()
-	card.custom_minimum_size = Vector2(0, 120)
+	card.custom_minimum_size = Vector2(0, 140)
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	var style: StyleBoxFlat = StyleBoxFlat.new()
@@ -61,13 +61,13 @@ func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available:
 	else:
 		style.bg_color = Color(0.85, 0.85, 0.85, 1)
 	style.border_color = Color(0.3, 0.2, 0.1, 1)
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(8)
-	style.set_content_margin_all(12)
+	style.set_border_width_all(3)
+	style.set_corner_radius_all(12)
+	style.set_content_margin_all(16)
 	card.add_theme_stylebox_override("panel", style)
 
 	var hbox: HBoxContainer = HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 12)
+	hbox.add_theme_constant_override("separation", 16)
 	card.add_child(hbox)
 
 	var info_vbox: VBoxContainer = VBoxContainer.new()
@@ -76,17 +76,17 @@ func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available:
 
 	var name_label: Label = Label.new()
 	name_label.text = upgrade.get("name", "Upgrade")
-	name_label.add_theme_font_size_override("font_size", 24)
+	name_label.add_theme_font_size_override("font_size", 30)
 	info_vbox.add_child(name_label)
 
 	var desc_label: Label = Label.new()
 	desc_label.text = upgrade.get("description", "")
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc_label.add_theme_font_size_override("font_size", 18)
+	desc_label.add_theme_font_size_override("font_size", 22)
 	info_vbox.add_child(desc_label)
 
 	var right_vbox: VBoxContainer = VBoxContainer.new()
-	right_vbox.custom_minimum_size = Vector2(140, 0)
+	right_vbox.custom_minimum_size = Vector2(160, 0)
 	right_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	hbox.add_child(right_vbox)
 
@@ -94,20 +94,21 @@ func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available:
 		var owned_label: Label = Label.new()
 		owned_label.text = "OWNED"
 		owned_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		owned_label.add_theme_font_size_override("font_size", 24)
+		owned_label.add_theme_font_size_override("font_size", 30)
 		owned_label.add_theme_color_override("font_color", Color(0.2, 0.5, 0.2))
 		right_vbox.add_child(owned_label)
 	else:
 		var cost_label: Label = Label.new()
 		cost_label.text = "$%d" % upgrade.get("cost", 0)
 		cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		cost_label.add_theme_font_size_override("font_size", 26)
+		cost_label.add_theme_font_size_override("font_size", 34)
 		right_vbox.add_child(cost_label)
 
 		if is_available:
 			var buy_button: Button = Button.new()
 			buy_button.text = "BUY"
-			buy_button.add_theme_font_size_override("font_size", 24)
+			buy_button.custom_minimum_size = Vector2(0, 60)
+			buy_button.add_theme_font_size_override("font_size", 30)
 			buy_button.pressed.connect(_on_buy_pressed.bind(upgrade))
 			right_vbox.add_child(buy_button)
 
