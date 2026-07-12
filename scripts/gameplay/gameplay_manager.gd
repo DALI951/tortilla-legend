@@ -20,14 +20,17 @@ var day_started_received: bool = false
 var customer_spawner_instance: Node2D = null
 
 var ingredient_colors: Dictionary = {
-	"lettuce": Color(0.3, 0.8, 0.3),
-	"tomato": Color(0.9, 0.2, 0.2),
-	"salsa": Color(0.8, 0.3, 0.1),
-	"cilantro": Color(0.2, 0.7, 0.4),
-	"onion": Color(0.9, 0.9, 0.8),
-	"cheese": Color(0.95, 0.85, 0.2),
-	"peppers": Color(0.9, 0.3, 0.1),
+	"lettuce": Color(0.15, 0.55, 0.15),
+	"tomato": Color(0.7, 0.1, 0.1),
+	"salsa": Color(0.6, 0.2, 0.05),
+	"cilantro": Color(0.1, 0.5, 0.2),
+	"onion": Color(0.5, 0.45, 0.35),
+	"cheese": Color(0.7, 0.6, 0.1),
+	"peppers": Color(0.65, 0.15, 0.05),
 }
+
+var DARK: Color = Color(0.15, 0.1, 0.05)
+var DARK_MED: Color = Color(0.25, 0.18, 0.1)
 
 @onready var timer_label: Label = $HUD/TimerLabel
 @onready var money_label: Label = $HUD/MoneyLabel
@@ -51,11 +54,14 @@ func _ready() -> void:
 	GameManager.day_started.connect(_on_day_started)
 	GameManager.day_ended.connect(_on_day_ended)
 	_apply_fonts()
+	_apply_colors()
 	_build_required_list()
 	tortilla_max = _get_tortilla_max()
 	serve_button.visible = false
 	event_label.visible = false
-	action_button.disabled = false
+	action_button.visible = true
+	action_button.disabled = true
+	action_button.text = "SELECT A CUSTOMER FIRST"
 	_update_ui()
 	if GameManager.current_state == GameManager.GameState.PLAYING:
 		_start_day_logic(GameManager.current_day)
@@ -64,13 +70,25 @@ func _apply_fonts() -> void:
 	timer_label.add_theme_font_size_override("font_size", 48)
 	money_label.add_theme_font_size_override("font_size", 48)
 	pause_button.add_theme_font_size_override("font_size", 36)
-	station_label.add_theme_font_size_override("font_size", 42)
-	order_label.add_theme_font_size_override("font_size", 32)
-	progress_label.add_theme_font_size_override("font_size", 36)
-	action_button.add_theme_font_size_override("font_size", 48)
+	station_label.add_theme_font_size_override("font_size", 44)
+	order_label.add_theme_font_size_override("font_size", 34)
+	progress_label.add_theme_font_size_override("font_size", 38)
+	action_button.add_theme_font_size_override("font_size", 44)
 	serve_button.add_theme_font_size_override("font_size", 48)
 	event_label.add_theme_font_size_override("font_size", 32)
 	$CustomerArea/CustomerLabel.add_theme_font_size_override("font_size", 36)
+
+func _apply_colors() -> void:
+	timer_label.add_theme_color_override("font_color", DARK)
+	money_label.add_theme_color_override("font_color", Color(0.1, 0.45, 0.1))
+	pause_button.add_theme_color_override("font_color", DARK)
+	station_label.add_theme_color_override("font_color", DARK)
+	order_label.add_theme_color_override("font_color", DARK_MED)
+	progress_label.add_theme_color_override("font_color", DARK_MED)
+	action_button.add_theme_color_override("font_color", Color.WHITE)
+	serve_button.add_theme_color_override("font_color", Color.WHITE)
+	event_label.add_theme_color_override("font_color", Color.WHITE)
+	$CustomerArea/CustomerLabel.add_theme_color_override("font_color", DARK)
 
 func _build_required_list() -> void:
 	required_ingredients.clear()
@@ -143,6 +161,7 @@ func _select_customer(customer: Node2D) -> void:
 	if customer == null or not is_instance_valid(customer):
 		return
 	current_customer = customer
+	state = PrepState.TORTILLA
 	FeedbackManager.vibrate_light()
 	_update_ui()
 
@@ -183,61 +202,68 @@ func _update_ui() -> void:
 
 	match state:
 		PrepState.WAITING:
-			station_label.text = "Tap a customer to start"
-			action_button.visible = false
+			station_label.text = "WAITING FOR CUSTOMER..."
+			action_button.visible = true
+			action_button.disabled = true
+			action_button.text = "SELECT A CUSTOMER ABOVE"
+			serve_button.visible = false
 			if current_customer:
 				_show_order()
 			else:
-				order_label.text = ""
+				order_label.text = "Tap a customer to start cooking"
 			progress_label.text = ""
 			_clear_ingredient_dots()
 		PrepState.TORTILLA:
-			station_label.text = "FILL THE TORTILLA"
+			station_label.text = "STEP 1: FILL THE TORTILLA"
 			action_button.visible = true
 			action_button.disabled = false
-			action_button.text = "TAP TO FILL"
-			progress_label.text = "%d / %d" % [tortilla_taps, tortilla_max]
+			action_button.text = "TAP TO FILL (%d/%d)" % [tortilla_taps, tortilla_max]
+			serve_button.visible = false
+			progress_label.text = ""
 			_show_order()
 			_update_ingredient_dots_tortilla()
 		PrepState.GRILL:
-			station_label.text = "GRILL THE MEAT"
-			action_button.visible = true
+			station_label.text = "STEP 2: GRILL THE MEAT"
+			serve_button.visible = false
 			if not grill_placed:
-				action_button.text = "PLACE MEAT"
+				action_button.visible = true
 				action_button.disabled = false
+				action_button.text = "PLACE MEAT ON GRILL"
 				progress_label.text = ""
-				_clear_ingredient_dots()
 			elif not grill_done:
 				var pct: int = int((grill_timer / grill_cook_time) * 100)
-				action_button.text = "COOKING..."
+				action_button.visible = true
 				action_button.disabled = true
-				progress_label.text = "%d%%" % pct
-				_clear_ingredient_dots()
+				action_button.text = "COOKING... %d%%" % pct
+				progress_label.text = "Wait for it to cook"
 			else:
-				action_button.text = "TAKE MEAT"
+				action_button.visible = true
 				action_button.disabled = false
-				progress_label.text = "DONE!"
-				_clear_ingredient_dots()
+				action_button.text = "TAKE MEAT OFF GRILL"
+				progress_label.text = "Done! Tap to continue"
+			_clear_ingredient_dots()
 		PrepState.TOPPINGS:
-			station_label.text = "ADD TOPPINGS"
+			station_label.text = "STEP 3: ADD TOPPINGS"
 			action_button.visible = true
 			action_button.disabled = false
-			action_button.text = "TAP TO ADD"
-			progress_label.text = "Tap until all added"
+			action_button.text = "TAP TO ADD TOPPING"
+			serve_button.visible = false
+			progress_label.text = "Tap until all toppings are on"
 			_show_order()
 			_update_ingredient_dots_toppings()
 		PrepState.PREP_DONE:
-			station_label.text = "TACO READY!"
+			station_label.text = "TACO IS READY!"
 			action_button.visible = false
 			serve_button.visible = true
-			progress_label.text = "Tap SERVE, then tap customer"
+			serve_button.text = "SERVE THE TACO"
+			progress_label.text = "Tap SERVE then tap the customer"
 			_show_order()
 			_update_ingredient_dots_done()
 		PrepState.SERVING:
-			station_label.text = "TAP A CUSTOMER TO SERVE"
+			station_label.text = "TAP THE CUSTOMER TO SERVE"
 			action_button.visible = false
 			serve_button.visible = false
-			progress_label.text = ""
+			progress_label.text = "Tap the customer up top"
 			_show_order()
 			_update_ingredient_dots_done()
 
@@ -260,7 +286,7 @@ func _update_ingredient_dots_tortilla() -> void:
 		if i < tortilla_taps and i < required_ingredients.size():
 			dot.color = ingredient_colors.get(required_ingredients[i], Color.WHITE)
 		elif i < tortilla_taps:
-			dot.color = Color(0.9, 0.85, 0.7)
+			dot.color = Color(0.85, 0.8, 0.7)
 		else:
 			dot.color = Color(0.6, 0.55, 0.5, 0.5)
 		var style: StyleBoxFlat = StyleBoxFlat.new()
@@ -300,7 +326,7 @@ func _update_ingredient_dots_done() -> void:
 		ingredient_dots.add_child(dot)
 
 func _on_action_pressed() -> void:
-	if is_paused:
+	if is_paused or action_button.disabled:
 		return
 	match state:
 		PrepState.TORTILLA:
@@ -452,10 +478,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					var global_pos: Vector2 = child.global_position
 					var mouse_pos: Vector2 = get_global_mouse_position()
 					if global_pos.distance_to(mouse_pos) < 120:
-						if current_customer != child:
-							_select_customer(child)
-						state = PrepState.TORTILLA
-						_update_ui()
+						_select_customer(child)
 						return
 
 func _exit_tree() -> void:

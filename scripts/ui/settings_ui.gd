@@ -15,13 +15,21 @@ func _ready() -> void:
 	_update_display()
 
 func _apply_fonts() -> void:
+	var dark: Color = Color(0.15, 0.1, 0.05)
 	$VBox/Title.add_theme_font_size_override("font_size", 56)
+	$VBox/Title.add_theme_color_override("font_color", dark)
 	$VBox/LanguageLabel.add_theme_font_size_override("font_size", 36)
+	$VBox/LanguageLabel.add_theme_color_override("font_color", dark)
 	lang_button.add_theme_font_size_override("font_size", 36)
+	lang_button.add_theme_color_override("font_color", Color.WHITE)
 	$VBox/SFXLabel.add_theme_font_size_override("font_size", 36)
+	$VBox/SFXLabel.add_theme_color_override("font_color", dark)
 	sfx_label.add_theme_font_size_override("font_size", 36)
+	sfx_label.add_theme_color_override("font_color", dark)
 	choice_toggle.add_theme_font_size_override("font_size", 32)
+	choice_toggle.add_theme_color_override("font_color", dark)
 	back_button.add_theme_font_size_override("font_size", 40)
+	back_button.add_theme_color_override("font_color", Color.WHITE)
 
 func _update_display() -> void:
 	lang_button.text = LocalizationManager.tr_key("language") + ": " + LocalizationManager.current_language.upper()

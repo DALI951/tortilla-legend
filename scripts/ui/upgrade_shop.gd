@@ -16,10 +16,15 @@ func _ready() -> void:
 	update_money()
 
 func _apply_fonts() -> void:
+	var dark: Color = Color(0.15, 0.1, 0.05)
 	$TopBar/Title.add_theme_font_size_override("font_size", 52)
+	$TopBar/Title.add_theme_color_override("font_color", dark)
 	money_label.add_theme_font_size_override("font_size", 48)
+	money_label.add_theme_color_override("font_color", Color(0.1, 0.45, 0.1))
 	back_button.add_theme_font_size_override("font_size", 36)
+	back_button.add_theme_color_override("font_color", Color.WHITE)
 	next_day_button.add_theme_font_size_override("font_size", 36)
+	next_day_button.add_theme_color_override("font_color", Color.WHITE)
 
 func load_upgrades() -> void:
 	var file: FileAccess = FileAccess.open("res://data/upgrades.json", FileAccess.READ)
@@ -74,15 +79,18 @@ func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available:
 	info_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hbox.add_child(info_vbox)
 
+	var dark: Color = Color(0.15, 0.1, 0.05)
 	var name_label: Label = Label.new()
 	name_label.text = upgrade.get("name", "Upgrade")
 	name_label.add_theme_font_size_override("font_size", 30)
+	name_label.add_theme_color_override("font_color", dark)
 	info_vbox.add_child(name_label)
 
 	var desc_label: Label = Label.new()
 	desc_label.text = upgrade.get("description", "")
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc_label.add_theme_font_size_override("font_size", 22)
+	desc_label.add_theme_color_override("font_color", Color(0.3, 0.22, 0.12))
 	info_vbox.add_child(desc_label)
 
 	var right_vbox: VBoxContainer = VBoxContainer.new()
@@ -95,13 +103,14 @@ func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available:
 		owned_label.text = "OWNED"
 		owned_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		owned_label.add_theme_font_size_override("font_size", 30)
-		owned_label.add_theme_color_override("font_color", Color(0.2, 0.5, 0.2))
+		owned_label.add_theme_color_override("font_color", Color(0.1, 0.4, 0.1))
 		right_vbox.add_child(owned_label)
 	else:
 		var cost_label: Label = Label.new()
 		cost_label.text = "$%d" % upgrade.get("cost", 0)
 		cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		cost_label.add_theme_font_size_override("font_size", 34)
+		cost_label.add_theme_color_override("font_color", Color(0.1, 0.45, 0.1))
 		right_vbox.add_child(cost_label)
 
 		if is_available:
@@ -109,6 +118,7 @@ func _create_upgrade_card(upgrade: Dictionary, is_purchased: bool, is_available:
 			buy_button.text = "BUY"
 			buy_button.custom_minimum_size = Vector2(0, 60)
 			buy_button.add_theme_font_size_override("font_size", 30)
+			buy_button.add_theme_color_override("font_color", Color.WHITE)
 			buy_button.pressed.connect(_on_buy_pressed.bind(upgrade))
 			right_vbox.add_child(buy_button)
 
